@@ -14,6 +14,7 @@ class Arbol:
         # Llamamos a los metodos de crearNodo y asignarVecinos
         self.crearNodo()
         self.asignarVecinos()
+        '''
         for nodo in self.nodos:
             print(f"({nodo.coordenadaX},{nodo.coordenadaY})", end=" ")
 
@@ -25,6 +26,8 @@ class Arbol:
                 for vecino in nodo3.vecinos:
                     
                     print(f"({vecino.coordenadaX},{vecino.coordenadaY})", end=" ")
+        '''
+        
 
     # Ahora creamos el metodo para crear el arbol a partir de nodo raiz
     '''
@@ -37,7 +40,7 @@ class Arbol:
         for filas in range(0, self.numeroFilas+1):
             for columnas in range(0, self.numeroColumnas+1):
                 # Creamos la lista donde se guardaran todos los objetos nodo
-                self.nodos.append(Nodo(columnas, filas, False, None))
+                self.nodos.append(Nodo(columnas, filas, False))
 
     # Ahora creamos el metodo para asignar los vecinos a cada nodo
     def asignarVecinos(self):
@@ -49,7 +52,7 @@ class Arbol:
             nodoArriba = nodo.coordenadaX, nodo.coordenadaY - 1
             nodoAbajo = nodo.coordenadaX, nodo.coordenadaY + 1
             
-            # Como no me interesan los vecinos diagonales, solamente verticales u horizontales, utilizo el operador logico XOR o OR exclusivo
+            # No me interesan los vecinos diagonales, solamente verticales u horizontales
             # Para poder asignar los valores creo un seeker o buscador que recorra la lista de nodos y me devuelva el nodo que cumpla con las condiciones
             for seeker in self.nodos:
                 #Coordenadas del nodo actual del seeker (en una tupla)
@@ -58,4 +61,4 @@ class Arbol:
                     nodo.vecinos.append(seeker)
 
 
-arbol = Arbol(5, 5)
+
