@@ -26,8 +26,16 @@ class Arbol:
         for filas in range(0, self.numeroFilas+1):
             for columnas in range(0, self.numeroColumnas+1):
                 # Creamos la lista donde se guardaran todos los objetos nodo
-                self.nodos.append(Nodo(columnas, filas, False))
+                #Vamos a generar una condicion para que en el eje X los primero 2 nodos tengan un estadoProhibitivo True, los 2 siguientes no y asi sucesivamente
+                if((filas % 6 < 2) or filas % 6 >= 4):
+                    if ((columnas % 4 < 2)):
+                        self.nodos.append(Nodo(columnas, filas, False,False))
+                    else:
+                        self.nodos.append(Nodo(columnas, filas, False,True))
+                else:
+                    self.nodos.append(Nodo(columnas, filas, False,False))
 
+                
     # Ahora creamos el metodo para asignar los vecinos a cada nodo
     def asignarVecinos(self):
 

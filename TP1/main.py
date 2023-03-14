@@ -1,6 +1,7 @@
 from Arbol import Arbol
 from Nodos import Nodo
 from Aestrella import Aestrella
+from nodosException import nodosException
 
 # Creamos el arbol
 # Ingreso tamaño del arbol
@@ -10,10 +11,22 @@ arbol = Arbol(columnas, filas)
 
 # Creamos los nodos inicial y final
 # Ingreso de coordenadas
-coordenadaXinicial = int(input("Ingrese la coordenada X del nodo inicial: "))
-coordenadaYinicial = int(input("Ingrese la coordenada Y del nodo inicial: "))
-coordenadaXfinal = int(input("Ingrese la coordenada X del nodo final: "))
-coordenadaYfinal = int(input("Ingrese la coordenada Y del nodo final: "))
+try:
+    coordenadaXinicial = int(input("Ingrese la coordenada X del nodo inicial: "))
+    coordenadaYinicial = int(input("Ingrese la coordenada Y del nodo inicial: "))
+    coordenadaXfinal = int(input("Ingrese la coordenada X del nodo final: "))
+    coordenadaYfinal = int(input("Ingrese la coordenada Y del nodo final: "))
+    for nodo in arbol.nodos:
+        if nodo.coordenadaX == coordenadaXinicial and nodo.coordenadaY == coordenadaYinicial:
+            if nodo.nodoProhibido == True:
+                raise nodosException("El nodo inicial ingresado corresponde a una repisa, modifiquelo")
+            
+        if nodo.coordenadaX == coordenadaXfinal and nodo.coordenadaY == coordenadaYfinal:
+            if nodo.nodoProhibido == True:
+                raise nodosException("El nodo final ingresado corresponde a una repisa, modifiquelo")
+except nodosException as error:
+    print(error)
+    exit()
 
 for nodos in arbol.nodos:
     if nodos.coordenadaX == coordenadaXinicial and nodos.coordenadaY == coordenadaYinicial:
@@ -26,5 +39,5 @@ aestrella = Aestrella(nodoInicial, nodoFinal, arbol)
 
 # Ejecutamos el algoritmo
 print(aestrella.buscador())
-#Finalmente ploteamosel camino
-aestrella.plotearCamino()
+#Finalmente ploteamos el camino, nodos de busqueda y espacio prohibido
+aestrella.plotear()

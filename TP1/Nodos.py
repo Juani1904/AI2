@@ -1,13 +1,14 @@
 class Nodo:
 
     # Creamos el constructor del objeto nodo
-    def __init__(self, coordenadaX, coordenadaY, estado):
+    def __init__(self, coordenadaX, coordenadaY, estado,estadoProhibicion):
 
         self.coordenadaX = coordenadaX
         self.coordenadaY = coordenadaY
         self.vecinos = []
         # Si esta True es porque fue visitado, si es False es porque aun no fue visitado
         self.estado = estado
+        self.nodoProhibido = estadoProhibicion
         self.funcionF = 0
 
     # Creamos metodo para obtener la distancia del manhattan
