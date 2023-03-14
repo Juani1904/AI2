@@ -1,6 +1,6 @@
 from Arbol import Arbol
 from Nodos import Nodo
-
+import matplotlib.pyplot as plt
 
 class Aestrella:
 
@@ -18,6 +18,10 @@ class Aestrella:
 
         # Creamos una lista donde cargaremos la hoja de ruta
         self.instrucciones = []
+        #Creamos una lista donde cargaremos las coordenadas en X del camino
+        self.coordenadasX = []
+        #Creamos una lista donde cargaremos las coordenadas en Y del camino
+        self.coordenadasY = []
 
     # Ahora, una vez teniendo los parametros que necesitamos, creamos un metodo para implementar el algoritmo A*
 
@@ -49,11 +53,13 @@ class Aestrella:
                     None
 
             # Le pasamos al metodo ruta las coordenadas del vecino que elegimos y el nodo actual, para que determine la direccion
-            self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,
-                      self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
+            self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
             # Actualizamos nodo actual al vecino con menor F y lo agregamos al camino
             self.camino.append(self.vecinoFmin)
             self.nodoActual = self.vecinoFmin
+        
+        #Una vez terminado el while le volvemos a pasar el self.ruta para que cargue el ultimo nodo actual
+        self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
 
         return f"El camino es: {self.instrucciones} y la distancia es {len(self.camino)} casillas"
 
@@ -89,4 +95,17 @@ class Aestrella:
         elif ((variacionY) > 0):
             instruccion = "Abajo"
 
+        else:
+            instruccion = "Llego a destino"
         self.instrucciones.append(instruccion)
+    
+        #Ademas vamos a agregar las coordenadas en X a una lista y las coordenadas en Y a otra lista para luego plotear el camino
+        self.coordenadasX.append(coordenadaXActual)
+        self.coordenadasY.append(coordenadaYActual)
+
+    
+    #Creamos un metodo para plotear el camino realizado por el algoritmo
+    def plotearCamino(self):
+        
+        plt.plot(self.coordenadasX, self.coordenadasY,linewidth=8.0)
+        plt.show()

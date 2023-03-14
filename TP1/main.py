@@ -26,3 +26,5 @@ aestrella = Aestrella(nodoInicial, nodoFinal, arbol)
 
 # Ejecutamos el algoritmo
 print(aestrella.buscador())
+#Finalmente ploteamosel camino
+aestrella.plotearCamino()
