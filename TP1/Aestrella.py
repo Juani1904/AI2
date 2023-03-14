@@ -11,12 +11,14 @@ class Aestrella:
         self.nodoFinal = nodoFinal
         self.arbol = arbol
         self.camino = []
-        #self.nodosVisitados = []
-        #self.nodosNoVisitados = []
-        #self.nodosNoVisitados.append(self.nodoInicial)
-        self.nodoActual = self.nodoInicial #Eh un principio el nodo actual sera el nodo inicial
+        self.nodoActual = self.nodoInicial #En un principio el nodo actual sera el nodo inicial
         self.vecinoFmin = None
-        #Ahora, una vez teniendo los parametros que necesitamos, creamos un metodo para implementar el algoritmo A*
+
+        #Creamos una lista donde cargaremos la hoja de ruta
+        self.instrucciones=[]
+
+
+    #Ahora, una vez teniendo los parametros que necesitamos, creamos un metodo para implementar el algoritmo A*
 
     def buscador(self):
 
@@ -44,20 +46,16 @@ class Aestrella:
 
                 else:
                     None
-                
+            
+            #Le pasamos al metodo ruta las coordenadas del vecino que elegimos y el nodo actual, para que determine la direccion
+            self.ruta(self.nodoActual.coordenadaX,self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX,self.vecinoFmin.coordenadaY)
             #Actualizamos nodo actual al vecino con menor F y lo agregamos al camino
             self.camino.append(self.vecinoFmin)
             self.nodoActual=self.vecinoFmin
         
-        return f"El camino es: {self.camino} y la distancia es {len(self.camino)} casillas"
+        return f"El camino es: {self.instrucciones} y la distancia es {len(self.camino)} casillas"
                 
             
-            
-
-
-        
-
-
     def calculaG(self):
 
         return len(self.camino)+1
@@ -71,6 +69,30 @@ class Aestrella:
         
         #Elijo como heuristica la distancia de Manhattan
         return abs(nodo.coordenadaX - self.nodoFinal.coordenadaX) + abs(nodo.coordenadaY - self.nodoFinal.coordenadaY)
+    
+    
+    #Creamos un metodo que me indique en que direccion se desplazo el algoritmo y lo coloque en la hoja de ruta
+
+    def ruta(self,coordenadaXActual,coordenadaYActual,coordenadaXVecino,coordenadaYVecino):
+
+        variacionX=coordenadaXVecino-coordenadaXActual
+        variacionY=coordenadaYVecino-coordenadaYActual
+
+        if ((variacionX) >0):
+            instruccion="Derecha"
+        
+        elif ((variacionX) <0):
+            instruccion="Izquierda"
+        
+        elif((variacionY) <0):
+            instruccion="Arriba"
+        
+        elif((variacionY) > 0):
+            instruccion="Abajo"
+        
+        self.instrucciones.append(instruccion)
+
+
 
 
 

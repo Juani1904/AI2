@@ -14,19 +14,6 @@ class Arbol:
         # Llamamos a los metodos de crearNodo y asignarVecinos
         self.crearNodo()
         self.asignarVecinos()
-        '''
-        for nodo in self.nodos:
-            print(f"({nodo.coordenadaX},{nodo.coordenadaY})", end=" ")
-
-        print("Ahora los vecinos de cada nodo")
-        for nodo2 in self.nodos:
-            print(f"({nodo2.coordenadaX},{nodo2.coordenadaY})")
-            for nodo3 in self.nodos:
-                print("\n\nNodo "+str(self.nodos.index(nodo3))+'\n\n')
-                for vecino in nodo3.vecinos:
-                    
-                    print(f"({vecino.coordenadaX},{vecino.coordenadaY})", end=" ")
-        '''
         
 
     # Ahora creamos el metodo para crear el arbol a partir de nodo raiz
@@ -59,6 +46,8 @@ class Arbol:
                 nodoActual = seeker.coordenadaX, seeker.coordenadaY
                 if ((nodoActual == nodoDerecho) or (nodoActual == nodoIzquierdo) or (nodoActual == nodoArriba) or (nodoActual == nodoAbajo)):
                     nodo.vecinos.append(seeker)
+                
+                
 
 
 
