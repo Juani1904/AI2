@@ -14,7 +14,6 @@ class Arbol:
         # Llamamos a los metodos de crearNodo y asignarVecinos
         self.crearNodo()
         self.asignarVecinos()
-        
 
     # Ahora creamos el metodo para crear el arbol a partir de nodo raiz
     '''
@@ -38,16 +37,11 @@ class Arbol:
             nodoIzquierdo = nodo.coordenadaX - 1, nodo.coordenadaY
             nodoArriba = nodo.coordenadaX, nodo.coordenadaY - 1
             nodoAbajo = nodo.coordenadaX, nodo.coordenadaY + 1
-            
+
             # No me interesan los vecinos diagonales, solamente verticales u horizontales
             # Para poder asignar los valores creo un seeker o buscador que recorra la lista de nodos y me devuelva el nodo que cumpla con las condiciones
             for seeker in self.nodos:
-                #Coordenadas del nodo actual del seeker (en una tupla)
+                # Coordenadas del nodo actual del seeker (en una tupla)
                 nodoActual = seeker.coordenadaX, seeker.coordenadaY
                 if ((nodoActual == nodoDerecho) or (nodoActual == nodoIzquierdo) or (nodoActual == nodoArriba) or (nodoActual == nodoAbajo)):
                     nodo.vecinos.append(seeker)
-                
-                
-
-
-
