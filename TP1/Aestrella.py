@@ -40,7 +40,7 @@ class Aestrella:
 
                 # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
                 #Ademas tambien lo ignoramos si su condicion es prohibida por ser un obstaculo
-                if ((vecino.estado == False) and (vecino.nodoProhibido == False)):
+                if ((vecino.estado == False) and (vecino.esObstaculo == False)):
                     # Calculamos funcion F
                     vecino.funcionF = self.calculaF(vecino)
                     # Elegimos al nodo con menor F
@@ -108,10 +108,14 @@ class Aestrella:
     #Creamos un metodo para plotear el camino realizado por el algoritmo
     def plotear(self):
         
+        plt.figure(figsize=(15,7.5))
+        plt.title("Roadmap")
+        plt.xlabel("Coordenada X")
+        plt.ylabel("Coordenada Y")
         plt.plot(self.coordenadasX, self.coordenadasY,linewidth=8.0,color='magenta')
         #Tambien vamos a plotear los nodos prohibidos en color negro con un grosor grande y rectangulos
         for nodo in self.arbol.nodos:
-            if nodo.nodoProhibido == True:
+            if nodo.esObstaculo == True:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
         ax = plt.gca()
         ax.set_facecolor('gray')

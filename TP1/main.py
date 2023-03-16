@@ -18,11 +18,11 @@ try:
     coordenadaYfinal = int(input("Ingrese la coordenada Y del nodo final: "))
     for nodo in arbol.nodos:
         if nodo.coordenadaX == coordenadaXinicial and nodo.coordenadaY == coordenadaYinicial:
-            if nodo.nodoProhibido == True:
+            if nodo.esObstaculo == True:
                 raise nodosException("El nodo inicial ingresado corresponde a una repisa, modifiquelo")
             
         if nodo.coordenadaX == coordenadaXfinal and nodo.coordenadaY == coordenadaYfinal:
-            if nodo.nodoProhibido == True:
+            if nodo.esObstaculo == True:
                 raise nodosException("El nodo final ingresado corresponde a una repisa, modifiquelo")
 except nodosException as error:
     print(error)

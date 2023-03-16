@@ -26,13 +26,14 @@ class Arbol:
         for filas in range(0, self.numeroFilas+1):
             for columnas in range(0, self.numeroColumnas+1):
                 # Creamos la lista donde se guardaran todos los objetos nodo
-                #Vamos a generar una condicion para que en el eje X los primero 2 nodos tengan un estadoProhibitivo True, los 2 siguientes no y asi sucesivamente
-                if((filas % 6 < 2) or filas % 6 >= 4):
-                    if ((columnas % 4 < 2)):
+                #Para generar los obstaculos generamos las siguientes condiciones mediante el operador modulo
+                #Primero verificamos las filas
+                if(not(filas % 6 < 2) or (filas % 6 >= 4)): #Si esta condicion se cumple, algunos seran camino y otros obstaculo, esto queda regido por el eje X
+                    if ((columnas % 4 < 2)): #Si esta condicion se cumple, el nodo sera camino
                         self.nodos.append(Nodo(columnas, filas, False,False))
-                    else:
+                    else: #Si esta condicion se cumple el nodo sera obstaculo
                         self.nodos.append(Nodo(columnas, filas, False,True))
-                else:
+                else: #Si no se cumple la condicion anterior, todos seran camino
                     self.nodos.append(Nodo(columnas, filas, False,False))
 
                 
