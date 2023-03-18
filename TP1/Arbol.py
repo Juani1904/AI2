@@ -1,4 +1,5 @@
-from Nodos import Nodo
+from Nodos import NodoCamino
+from Nodos import NodoCaja
 
 
 class Arbol:
@@ -30,11 +31,11 @@ class Arbol:
                 #Primero verificamos las filas
                 if(not(filas % 6 < 2) or (filas % 6 >= 4)): #Si esta condicion se cumple, algunos seran camino y otros obstaculo, esto queda regido por el eje X
                     if ((columnas % 4 < 2)): #Si esta condicion se cumple, el nodo sera camino
-                        self.nodos.append(Nodo(columnas, filas, False,False))
+                        self.nodos.append(NodoCamino(columnas, filas, False))
                     else: #Si esta condicion se cumple el nodo sera obstaculo
-                        self.nodos.append(Nodo(columnas, filas, False,True))
+                        self.nodos.append(NodoCaja(columnas, filas, False))
                 else: #Si no se cumple la condicion anterior, todos seran camino
-                    self.nodos.append(Nodo(columnas, filas, False,False))
+                    self.nodos.append(NodoCamino(columnas, filas, False))
 
                 
     # Ahora creamos el metodo para asignar los vecinos a cada nodo

@@ -1,5 +1,6 @@
 from Arbol import Arbol
-from Nodos import Nodo
+from Nodos import NodoCamino
+from Nodos import NodoCaja
 import matplotlib.pyplot as plt
 
 class Aestrella:
@@ -39,8 +40,9 @@ class Aestrella:
             for vecino in self.nodoActual.vecinos:
 
                 # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
-                #Ademas tambien lo ignoramos si su condicion es prohibida por ser un obstaculo
-                if ((vecino.estado == False) and (vecino.esObstaculo == False)):
+                #Ademas establecemos la condicion de que lo ignore si es un nodo obstaculo (caja)
+                #Para ello verificamos si el vecino es una instancia de la clase NodoCamino, ya que si es una instancia de la clase NodoCaja, no es un nodo camino
+                if ((vecino.estado == False) and (isinstance(vecino,NodoCamino))):
                     # Calculamos funcion F
                     vecino.funcionF = self.calculaF(vecino)
                     # Elegimos al nodo con menor F
@@ -112,10 +114,10 @@ class Aestrella:
         plt.title("Roadmap")
         plt.xlabel("Coordenada X")
         plt.ylabel("Coordenada Y")
-        plt.plot(self.coordenadasX, self.coordenadasY,linewidth=8.0,color='magenta')
+        plt.plot(self.coordenadasX, self.coordenadasY,linewidth=10.0,color='magenta')
         #Tambien vamos a plotear los nodos prohibidos en color negro con un grosor grande y rectangulos
         for nodo in self.arbol.nodos:
-            if nodo.esObstaculo == True:
+            if isinstance(nodo,NodoCaja) == True:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
         ax = plt.gca()
         ax.set_facecolor('gray')

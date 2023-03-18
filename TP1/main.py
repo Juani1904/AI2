@@ -1,5 +1,6 @@
 from Arbol import Arbol
-from Nodos import Nodo
+from Nodos import NodoCamino
+from Nodos import NodoCaja
 from Aestrella import Aestrella
 from nodosException import nodosException
 
@@ -18,11 +19,11 @@ try:
     coordenadaYfinal = int(input("Ingrese la coordenada Y del nodo final: "))
     for nodo in arbol.nodos:
         if nodo.coordenadaX == coordenadaXinicial and nodo.coordenadaY == coordenadaYinicial:
-            if nodo.esObstaculo == True:
+            if isinstance(nodo,NodoCaja) == True:
                 raise nodosException("El nodo inicial ingresado corresponde a una repisa, modifiquelo")
             
         if nodo.coordenadaX == coordenadaXfinal and nodo.coordenadaY == coordenadaYfinal:
-            if nodo.esObstaculo == True:
+            if isinstance(nodo,NodoCaja) == True:
                 raise nodosException("El nodo final ingresado corresponde a una repisa, modifiquelo")
 except nodosException as error:
     print(error)
