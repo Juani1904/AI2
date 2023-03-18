@@ -93,10 +93,10 @@ class Aestrella:
             instruccion = "Izquierda"
 
         elif ((variacionY) < 0):
-            instruccion = "Abajo"
+            instruccion = "Arriba"
 
         elif ((variacionY) > 0):
-            instruccion = "Arriba"
+            instruccion = "Abajo"
 
         else:
             instruccion = "Llego a destino"
@@ -110,8 +110,7 @@ class Aestrella:
     #Creamos un metodo para plotear el camino realizado por el algoritmo
     def plotear(self):
         
-        plt.figure(figsize=(15,7.5))
-        plt.title("Roadmap")
+        plt.figure("Roadmap",figsize=(15,7.5))
         plt.xlabel("Coordenada X")
         plt.ylabel("Coordenada Y")
         plt.plot(self.coordenadasX, self.coordenadasY,linewidth=10.0,color='magenta')
@@ -119,6 +118,9 @@ class Aestrella:
         for nodo in self.arbol.nodos:
             if isinstance(nodo,NodoCaja) == True:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
+                #Asignacion del numero de nodo a cada caja
+                plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=15, ha='center', va='center')
         ax = plt.gca()
         ax.set_facecolor('gray')
+        ax.invert_yaxis()
         plt.show()

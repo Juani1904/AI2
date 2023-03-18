@@ -14,6 +14,8 @@ class NodoCamino:
     def distanciaManhattan(self, nodoFinal):
 
         return abs(self.coordenadaX - nodoFinal.coordenadaX) + abs(self.coordenadaY - nodoFinal.coordenadaY)
+    
+    
 
 
 
@@ -33,7 +35,8 @@ class NodoCaja(NodoCamino):
         #Asignamos valor al id
         
         self.id = id    
-        
+    
+
 
 
 
