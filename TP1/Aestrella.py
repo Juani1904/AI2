@@ -42,7 +42,7 @@ class Aestrella:
                 # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
                 #Ademas establecemos la condicion de que lo ignore si es un nodo obstaculo (caja)
                 #Para ello verificamos si el vecino es una instancia de la clase NodoCamino, ya que si es una instancia de la clase NodoCaja, no es un nodo camino
-                if ((vecino.estado == False) and (isinstance(vecino,NodoCamino))):
+                if (vecino.estado == False) and (type(vecino) is NodoCamino):
                     # Calculamos funcion F
                     vecino.funcionF = self.calculaF(vecino)
                     # Elegimos al nodo con menor F
@@ -116,7 +116,7 @@ class Aestrella:
         plt.plot(self.coordenadasX, self.coordenadasY,linewidth=10.0,color='magenta')
         #Tambien vamos a plotear los nodos prohibidos en color negro con un grosor grande y rectangulos
         for nodo in self.arbol.nodos:
-            if isinstance(nodo,NodoCaja) == True:
+            if type(nodo) is NodoCaja:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
                 #Asignacion del numero de nodo a cada caja
                 plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=15, ha='center', va='center')

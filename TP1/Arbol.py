@@ -14,8 +14,11 @@ class Arbol:
 
         # Llamamos a los metodos de crearNodo y asignarVecinos
         self.crearNodo()
+        #Le asignamos el id a los nodos caja
+        self.asignarId()
+        #Asignamos los vecinos a cada nodo
         self.asignarVecinos()
-
+        
     # Ahora creamos el metodo para crear el arbol a partir de nodo raiz
     '''
     Para ello vamos a utilizar el algoritmo de busqueda en anchura, para ir creando el arbol al instanciar los distintos objetos nodos,
@@ -54,8 +57,7 @@ class Arbol:
                 else: #Si no se cumple la condicion anterior, todos seran camino
                     self.nodos.append(NodoCamino(columnas, filas, False))
         
-        #Le asignamos el id a los nodos caja
-        self.asignarId()
+        
 
                 
     # Ahora creamos el metodo para asignar los vecinos a cada nodo
@@ -89,28 +91,6 @@ class Arbol:
                 caja.id=contador
                 contador+=1
 
-
-        '''
-        #Creamos una lista auxiliar donde guardaremos los nodos caja
-        listaAuxiliar = []
-        
-        #Creamos un bucle for para recorrer la lista de nodos y guardar los nodos caja en la lista auxiliar
-        for nodo in self.nodos:
-            if(isinstance(nodo, NodoCaja)):
-                listaAuxiliar.append(nodo)
-        for elemento in listaAuxiliar:
-            print(f"({elemento.coordenadaX},{elemento.coordenadaY})")
-        #Ahora lo que hacemos es tomar la lista auxiliar de objetos caja y agruparlos de a 2, para luego ordenarlos de acuerdo a su posicion en la estanteria
-        
-        #listaAuxiliar = [listaAuxiliar[i:i+2] for i in range(0, len(listaAuxiliar), 2)]
-
-        #Con la funcion sorted de python podemos ordenar de menor a mayor segun coordenada y y terminar desempatando con coordenada x
-        #Vamos a usar
-        print("Lista ordenada")
-        listaAuxiliar = sorted(listaAuxiliar)
-        for elemento in listaAuxiliar:
-            print(f"({elemento.coordenadaX},{elemento.coordenadaY})")
-        '''
 
         
 

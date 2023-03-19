@@ -8,4 +8,4 @@ class Estanteria:
 
         self.id=idEstanteria
         self.cajas=[]
-        self.cantidad+=1 #Aumentamos en 1 la cantidad de estanterias que se crean
+        Estanteria.cantidad+=1 #Como es un atributo de clase debemos referenciarlo asi, no con el self
