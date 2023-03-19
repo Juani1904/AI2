@@ -1,9 +1,6 @@
 from Arbol import Arbol
-from Nodos import NodoCamino
-from Nodos import NodoCaja
-from Aestrella import Aestrella
-from nodosException import nodosException
 from Estanterias import Estanteria
+from TempleSimulado import TempleSimulado
 
 #Creamos una funcion para referenciar el id de la caja a la coordenada en el camino
 def idACoordenada(id):
@@ -34,56 +31,39 @@ columnas = int(input("Ingrese numero de columnas del espacio de busqueda: "))
 filas = int(input("Ingrese numero de filas del espacio de busqueda: "))
 arbol = Arbol(columnas, filas)
 
-# Creamos los nodos inicial y final
-#Le preguntamos al usuario si quiere referenciar el inicio y el final con coordenadas o con id de caja en estanteria
-print("Ingrese 1 si desea referenciar el inicio y el final con COORDENADAS")
-print("Ingrese 2 si desea referenciar el inicio y el final con ID")
-opcion = int(input("Opcion(1/2): "))
-if (opcion == 1):
-    
-    # Ingreso por coordenadas
-    try:
-        coordenadaXinicial = int(input("Ingrese la coordenada X del nodo inicial: "))
-        coordenadaYinicial = int(input("Ingrese la coordenada Y del nodo inicial: "))
-        coordenadaXfinal = int(input("Ingrese la coordenada X del nodo final: "))
-        coordenadaYfinal = int(input("Ingrese la coordenada Y del nodo final: "))
-        for nodo in arbol.nodos:
-            if nodo.coordenadaX == coordenadaXinicial and nodo.coordenadaY == coordenadaYinicial:
-                if isinstance(nodo,NodoCaja) == True:
-                    raise nodosException("El nodo inicial ingresado corresponde a una repisa, modifiquelo")
-                
-            if nodo.coordenadaX == coordenadaXfinal and nodo.coordenadaY == coordenadaYfinal:
-                if isinstance(nodo,NodoCaja) == True:
-                    raise nodosException("El nodo final ingresado corresponde a una repisa, modifiquelo")
-    except nodosException as error:
-        print(error)
-        exit()
+#Posicion del camion. Puede estar en cualquier esquina del espacio de busqueda
+print("Ingrese numero de estacionamiento de camion de carga: ")
+print("1. Esquina superior izquierda")
+print("2. Esquina superior derecha")
+print("3. Esquina inferior izquierda")
+print("4. Esquina inferior derecha")
+camionEstacionamiento = int(input())
+if camionEstacionamiento == 1:
+    nodoEstacionamiento = arbol.nodos[0]
+elif camionEstacionamiento == 2:
+    nodoEstacionamiento = arbol.nodos[columnas-1]
+elif camionEstacionamiento == 3:
+    nodoEstacionamiento = arbol.nodos[(filas-1)*columnas]
+elif camionEstacionamiento == 4:
+    nodoEstacionamiento = arbol.nodos[(filas*columnas)-1]
 
-    for nodos in arbol.nodos:
-        if nodos.coordenadaX == coordenadaXinicial and nodos.coordenadaY == coordenadaYinicial:
-            nodoInicial = nodos
-        if nodos.coordenadaX == coordenadaXfinal and nodos.coordenadaY == coordenadaYfinal:
-            nodoFinal = nodos
-
-elif (opcion == 2):
-    print("Ingrese el id de la caja en estanteria que desea como nodo inicial: ")
-    print(f"En el espacio generado existen {Estanteria.cantidad} ESTANTERIAS")
-    cantidadCajas= lambda estanterias: sum([len(estanteria.cajas) for estanteria in estanterias])
-    inicio=int(input(f"Ingrese un id del espacio de caja INICIAL del 1 al {cantidadCajas(arbol.estanteria)}. Ingrese 0 para area de carga/descarga: "))
-    final=int(input(f"Ingrese un id del espacio de caja FINAL del 1 al {cantidadCajas(arbol.estanteria)}. Ingrese 0 para area de carga/descarga: "))
-
-    #Convertimos el id ingresado a coordinada mediante la funcion creada al principio, la cual nos retorna un objeto nodo
-    nodoInicial=idACoordenada(inicio)
-    nodoFinal=idACoordenada(final)
+# Ingreso de lista de productos
+print(f"En el espacio generado existen {Estanteria.cantidad} ESTANTERIAS")
+cantidadCajas= lambda estanterias: sum([len(estanteria.cajas) for estanteria in estanterias])
+listaProductos=[]
+while True:
+    inicio=int(input(f"Ingrese el ID del producto del 1 al {cantidadCajas(arbol.estanteria)} a cargar en el camion. Al finalizar escriba 0: "))
+    if inicio==0:
+        break
+    else:
+        listaProductos.append(idACoordenada(inicio))
 
 
-# Creamos el objeto A*
-aestrella = Aestrella(nodoInicial, nodoFinal, arbol)
+#Finalmente le pasamos los parametros al objeto algoritmo TempleSimulado
 
-# Ejecutamos el algoritmo
-print(aestrella.buscador())
-#Finalmente ploteamos el camino, nodos de busqueda y espacio prohibido
-aestrella.plotear()
+templeSimulado=TempleSimulado(nodoEstacionamiento, listaProductos)
+
+
 
 
 
