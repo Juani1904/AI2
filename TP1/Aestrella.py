@@ -2,7 +2,7 @@ from Arbol import Arbol
 from Nodos import NodoCamino
 from Nodos import NodoCaja
 import matplotlib.pyplot as plt
-
+from nodosException import nodosException
 class Aestrella:
 
     # Creamos el constructor de la clase
@@ -35,35 +35,53 @@ class Aestrella:
         Tenemos que hayar la forma de recorrer el arbol que creamos mediante el objeto arbol, calcular el g,h y f de cada nodo 
         y luego ir comparando los valores de f para ir eligiendo el nodo con menor f
         '''
+        numeroIteraciones=0 #Contador de iteraciones
         # Para ello primero debemos establecer la condicion de satisfaccion, es decir, cuando nuestro encuentra el test objeto, o nodo final
         while (self.nodoActual != self.nodoFinal):
+            numeroIteraciones+=1 #Aumentamos el contador en 1
+            #Generamos el try
+            try:
+                #Si el numero de iteraciones es mayor a 1000, lanzamos la excepcion
+                if numeroIteraciones>1000:
+                    raise nodosException("El buscador se quedo trabado.Haciendo backtrack al estado anterior")
+                # Calculamos la funcion F de los vecinos del nodo actual
+                # Colocamos un valor muy alto para que el primer vecino que se encuentre tenga menor F
+                valorFmin = 100000
+                for vecino in self.nodoActual.vecinos:
 
-            # Calculamos la funcion F de los vecinos del nodo actual
-            # Colocamos un valor muy alto para que el primer vecino que se encuentre tenga menor F
-            valorFmin = 100000
-            for vecino in self.nodoActual.vecinos:
+                    # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
+                    #Ademas establecemos la condicion de que lo ignore si es un nodo obstaculo (caja)
+                    #Para ello verificamos si el vecino es una instancia de la clase NodoCamino, ya que si es una instancia de la clase NodoCaja, no es un nodo camino
+                    if (vecino.estado == False) and (type(vecino) is NodoCamino):
+                        # Calculamos funcion F
+                        vecino.funcionF = self.calculaF(vecino)
+                        # Elegimos al nodo con menor F
+                        if (vecino.funcionF <= valorFmin):
+                            valorFmin = vecino.funcionF
+                            self.vecinoFmin = vecino
+                        # Establecemos al vecino analizado como visado
+                        vecino.estado = True
 
-                # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
-                #Ademas establecemos la condicion de que lo ignore si es un nodo obstaculo (caja)
-                #Para ello verificamos si el vecino es una instancia de la clase NodoCamino, ya que si es una instancia de la clase NodoCaja, no es un nodo camino
-                if (vecino.estado == False) and (type(vecino) is NodoCamino):
-                    # Calculamos funcion F
-                    vecino.funcionF = self.calculaF(vecino)
-                    # Elegimos al nodo con menor F
-                    if (vecino.funcionF <= valorFmin):
-                        valorFmin = vecino.funcionF
-                        self.vecinoFmin = vecino
-                    # Establecemos al vecino analizado como visado
-                    vecino.estado = True
+                    else:
+                        None
 
-                else:
-                    None
-
-            # Le pasamos al metodo ruta las coordenadas del vecino que elegimos y el nodo actual, para que determine la direccion
-            self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
-            # Actualizamos nodo actual al vecino con menor F y lo agregamos al camino
-            self.camino.append(self.vecinoFmin)
-            self.nodoActual = self.vecinoFmin
+                # Le pasamos al metodo ruta las coordenadas del vecino que elegimos y el nodo actual, para que determine la direccion
+                self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
+                # Actualizamos nodo actual al vecino con menor F y lo agregamos al camino
+                self.camino.append(self.vecinoFmin)
+                self.nodoActual = self.vecinoFmin
+            
+            except nodosException as e:
+                print(e) #Mostramos mensaje que el buscador se quedo trabado
+                #Seteamos este nodo actual como ya visaado para que no se vuelva a ejecutar
+                self.nodoActual.estado=True
+                #Eliminamos el ultimo nodo del camino, el cual es este mismo nodo
+                self.camino.pop()
+                #Hacemos backtrack al nodo de donde vinimos, que es el ultimo nodo del camino
+                self.nodoActual=self.camino[-1]
+                #Seteamos al contador de iteraciones nuevamente en 0
+                numeroIteraciones=0
+                
 
         #Asignamos la distancia recorrida al atributo
         self.distanciaRecorrida = len(self.camino)
