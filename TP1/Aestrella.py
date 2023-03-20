@@ -146,7 +146,4 @@ class Aestrella:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
                 #Asignacion del numero de nodo a cada caja
                 plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=15, ha='center', va='center')
-        ax = plt.gca()
-        ax.set_facecolor('gray')
-        ax.invert_yaxis()
-        plt.show()
+        

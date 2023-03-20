@@ -25,7 +25,7 @@ elif camionEstacionamiento == 2:
 elif camionEstacionamiento == 3:
     nodoEstacionamiento = indicaPosicion(0,filas)
 elif camionEstacionamiento == 4:
-    nodoEstacionamiento = indicaPosicion(columnas,filas)
+    nodoEstacionamiento = arbol.nodos[-1]
 
 # Ingreso de lista de productos
 print(f"En el espacio generado existen {Estanteria.cantidad} ESTANTERIAS")
@@ -41,7 +41,7 @@ while True:
 
 #Finalmente le pasamos los parametros al objeto algoritmo TempleSimulado
 
-templeSimulado=TempleSimulado(arbol,nodoEstacionamiento, listaProductos,20,10)
+templeSimulado=TempleSimulado(arbol,nodoEstacionamiento, listaProductos,100,10)
 
 
 
