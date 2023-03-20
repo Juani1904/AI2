@@ -136,7 +136,7 @@ class Aestrella:
     #Creamos un metodo para plotear el camino realizado por el algoritmo
     def plotear(self):
         
-        plt.figure("Roadmap",figsize=(15,7.5))
+        plt.figure("Roadmap",figsize=(10,10))
         plt.xlabel("Coordenada X")
         plt.ylabel("Coordenada Y")
         plt.plot(self.coordenadasX, self.coordenadasY,linewidth=10.0,color='magenta')
@@ -145,5 +145,5 @@ class Aestrella:
             if type(nodo) is NodoCaja:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
                 #Asignacion del numero de nodo a cada caja
-                plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=15, ha='center', va='center')
+                plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=10, ha='center', va='center')
         

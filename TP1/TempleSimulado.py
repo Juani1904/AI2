@@ -156,6 +156,7 @@ class TempleSimulado:
         ax = plt.gca()
         ax.set_facecolor('gray')
         ax.invert_yaxis()
+        plt.axis('equal')
         plt.show()
 
 
