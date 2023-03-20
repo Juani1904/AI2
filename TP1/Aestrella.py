@@ -46,7 +46,7 @@ class Aestrella:
                     # Calculamos funcion F
                     vecino.funcionF = self.calculaF(vecino)
                     # Elegimos al nodo con menor F
-                    if (vecino.funcionF < valorFmin):
+                    if (vecino.funcionF <= valorFmin):
                         valorFmin = vecino.funcionF
                         self.vecinoFmin = vecino
                     # Establecemos al vecino analizado como visado
