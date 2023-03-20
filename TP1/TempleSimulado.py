@@ -105,20 +105,23 @@ class TempleSimulado:
                 self.aEstrella.nodoInicial=self.nodoInicial
                 self.aEstrella.nodoFinal=elemento
                 self.aEstrella.buscador()
-                costo+=len(self.aEstrella.camino)
+                costo+=self.aEstrella.distanciaRecorrida
+                self.aEstrella.reset() #Reseteamos el algoritmo para que no se acumulen los costos y estados de los nodos, ni los parametros de busqueda
 
             elif i==len(estado)-1:
                 self.aEstrella.nodoInicial=elemento
                 self.aEstrella.nodoFinal=self.nodoFinal
                 self.aEstrella.buscador()
-                costo+=len(self.aEstrella.camino)
+                costo+=self.aEstrella.distanciaRecorrida
+                self.aEstrella.reset()
 
             else:
                 elementoAnterior=estado[i-1]
                 self.aEstrella.nodoInicial=elementoAnterior
                 self.aEstrella.nodoFinal=elemento
                 self.aEstrella.buscador()
-                costo+=len(self.aEstrella.camino)
+                costo+=self.aEstrella.distanciaRecorrida
+                self.aEstrella.reset()
         
         return costo
 

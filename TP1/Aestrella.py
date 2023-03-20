@@ -13,8 +13,9 @@ class Aestrella:
         self.nodoFinal = nodoFinal
         self.arbol = arbol
         self.camino = []
+        self.distanciaRecorrida = 0
         # En un principio el nodo actual sera el nodo inicial
-        self.nodoActual = self.nodoInicial
+        self.nodoActual = None
         self.vecinoFmin = None
 
         # Creamos una lista donde cargaremos la hoja de ruta
@@ -23,10 +24,13 @@ class Aestrella:
         self.coordenadasX = []
         #Creamos una lista donde cargaremos las coordenadas en Y del camino
         self.coordenadasY = []
-
+    
+    
     # Ahora, una vez teniendo los parametros que necesitamos, creamos un metodo para implementar el algoritmo A*
 
     def buscador(self):
+        #Establecemos al nodo actual como el nodo inicial
+        self.nodoActual=self.nodoInicial
         '''
         Tenemos que hayar la forma de recorrer el arbol que creamos mediante el objeto arbol, calcular el g,h y f de cada nodo 
         y luego ir comparando los valores de f para ir eligiendo el nodo con menor f
@@ -60,16 +64,31 @@ class Aestrella:
             # Actualizamos nodo actual al vecino con menor F y lo agregamos al camino
             self.camino.append(self.vecinoFmin)
             self.nodoActual = self.vecinoFmin
-        
+
+        #Asignamos la distancia recorrida al atributo
+        self.distanciaRecorrida = len(self.camino)
+
         #Una vez terminado el while le volvemos a pasar el self.ruta para que cargue el ultimo nodo actual
         self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
 
-        #Finalizada la busqueda reseamos todos los valores de los nodos para que no interfieran en futuras busquedas
+        return f"El camino es: {self.instrucciones} y la distancia es {self.distanciaRecorrida} casillas"
+    
+    #Definimos metodo de reseteo de valores para poder iniciar una nueva busqueda sin problema
+    def reset(self):
+        #Reseteo de valores del objeto Aestrella
+        self.nodoInicial = None
+        self.nodoFinal = None
+        self.camino = []
+        self.distanciaRecorrida = 0
+        self.nodoActual = None
+        self.vecinoFmin = None
+        self.instrucciones = []
+        self.coordenadasX = []
+        self.coordenadasY = []
+        #Reseteo de valores de los nodos
         for nodo in self.arbol.nodos:
             nodo.estado = False
             nodo.funcionF = 0
-
-        return f"El camino es: {self.instrucciones} y la distancia es {len(self.camino)} casillas"
 
     def calculaG(self):
 
