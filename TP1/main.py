@@ -2,29 +2,6 @@ from Arbol import Arbol
 from Estanterias import Estanteria
 from TempleSimulado import TempleSimulado
 
-#Creamos una funcion para referenciar el id de la caja a la coordenada en el camino
-def idACoordenada(id):
-    #Ahora establecemos la condicion para relacionarlo con la coordenada junto al espacio con el id determinado
-    if (id==0):
-        return arbol.nodos[0]
-    else:
-        for estanteria in arbol.estanteria:
-            for caja in estanteria.cajas:
-                if (caja.id == id) and (id % 2 != 0):
-                    coordenadaXReferencia=caja.coordenadaX-1
-                    for nodo in arbol.nodos:
-                        if nodo.coordenadaX == coordenadaXReferencia and nodo.coordenadaY == caja.coordenadaY:
-                            return nodo
-                elif (caja.id == id) and (id % 2 == 0):
-                    coordenadaXReferencia=caja.coordenadaX+1
-                    for nodo in arbol.nodos:
-                        if nodo.coordenadaX == coordenadaXReferencia and nodo.coordenadaY == caja.coordenadaY:
-                            return nodo
-
-
-
-
-
 # Creamos el arbol
 # Ingreso tamaño del arbol
 columnas = int(input("Ingrese numero de columnas del espacio de busqueda: "))
@@ -56,12 +33,12 @@ while True:
     if inicio==0:
         break
     else:
-        listaProductos.append(idACoordenada(inicio))
+        listaProductos.append(arbol.idACoordenada(inicio))
 
 
 #Finalmente le pasamos los parametros al objeto algoritmo TempleSimulado
 
-templeSimulado=TempleSimulado(nodoEstacionamiento, listaProductos)
+templeSimulado=TempleSimulado(arbol,nodoEstacionamiento, listaProductos,20,10)
 
 
 

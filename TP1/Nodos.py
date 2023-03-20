@@ -16,6 +16,8 @@ class NodoCamino:
         return abs(self.coordenadaX - nodoFinal.coordenadaX) + abs(self.coordenadaY - nodoFinal.coordenadaY)
     
     
+    
+    
 
 
 

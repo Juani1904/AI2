@@ -78,6 +78,8 @@ class Aestrella:
 
         # Elijo como heuristica la distancia de Manhattan
         return abs(nodo.coordenadaX - self.nodoFinal.coordenadaX) + abs(nodo.coordenadaY - self.nodoFinal.coordenadaY)
+    
+    
 
     # Creamos un metodo que me indique en que direccion se desplazo el algoritmo y lo coloque en la hoja de ruta
 
