@@ -15,14 +15,17 @@ print("2. Esquina superior derecha")
 print("3. Esquina inferior izquierda")
 print("4. Esquina inferior derecha")
 camionEstacionamiento = int(input())
+#Utilizamos esta funcion lambda para obtener los nodos de las esquinas del espacio de busqueda
+#Utilizamos la funcion next ya que la funcion nos devuelve una lista de 1 elemento y yo solo quiero el elemento
+indicaPosicion = lambda coordX, coordY: next((elemento for elemento in arbol.nodos if (elemento.coordenadaX == coordX and elemento.coordenadaY == coordY)), None)
 if camionEstacionamiento == 1:
-    nodoEstacionamiento = arbol.nodos[0]
+    nodoEstacionamiento = indicaPosicion(0,0)
 elif camionEstacionamiento == 2:
-    nodoEstacionamiento = arbol.nodos[columnas-1]
+    nodoEstacionamiento = indicaPosicion(columnas,0)
 elif camionEstacionamiento == 3:
-    nodoEstacionamiento = arbol.nodos[(filas-1)*columnas]
+    nodoEstacionamiento = indicaPosicion(0,filas)
 elif camionEstacionamiento == 4:
-    nodoEstacionamiento = arbol.nodos[(filas*columnas)-1]
+    nodoEstacionamiento = indicaPosicion(columnas,filas)
 
 # Ingreso de lista de productos
 print(f"En el espacio generado existen {Estanteria.cantidad} ESTANTERIAS")

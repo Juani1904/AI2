@@ -111,14 +111,17 @@ class Arbol:
                         for nodo in self.nodos:
                             if nodo.coordenadaX == coordenadaXReferencia and nodo.coordenadaY == caja.coordenadaY:
                                 return nodo
-                            
-
-    
-    #Creamos un nodo que me resetee el estado de los nodos del arbol
-    def resetNodos(self):
-        for nodo in self.nodos:
-            nodo.estado = False
-            nodo.funcion=0
+        
+        #Definimos un metodo que haga lo contrario al anterior, que pase de coordenada a id, para 
+    def coordenadaAId(self,elemento):
+        coordX=elemento.coordenadaX
+        coordY=elemento.coordenadaY
+        for estanteria in self.estanteria:
+            for caja in estanteria.cajas:
+                if ((caja.coordenadaX == coordX+1) or (caja.coordenadaX == coordX-1)) and (caja.coordenadaY == coordY):
+                    return caja.id
+                
+                        
 
 
         

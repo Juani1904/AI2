@@ -20,7 +20,7 @@ class TempleSimulado:
         self.estadoActual=listaProductos
         self.estadosVecinos=[]
         self.estadosPosibles=[]
-        
+        self.aEstrella=Aestrella(None,None,self.arbol)
         #Ejecutamos el algoritmo
         self.ejecutaAlgortimo()
 
@@ -59,9 +59,13 @@ class TempleSimulado:
                     self.estadoActual=estadoVecino #Actualizamos el estado actual
         
         #Imprimimos el estado final
-        print("El estado final es: ")
-        for elemento in self.estadoActual:
-            print(elemento.id)
+        print("El orden optimo es: ")
+        print("1) Camion")
+        contador=1
+        for i,elemento in enumerate(self.estadoActual):
+            print(f"{i+2}) Articulo ID {self.arbol.coordenadaAId(elemento)}")
+            contador+=1
+        print (f"{contador+1}) Camion")
                 
 
 
@@ -71,15 +75,15 @@ class TempleSimulado:
     #Para ello haremos uso de la libreria iter tools
     def calculaVecinos(self):
 
-        self.estadosPosibles=itertools.permutations(self.estadoActual)
+        self.estadosPosibles=list(itertools.permutations(self.estadoActual))
 
         #Ahora vamos a determinar cuales de las permutaciones son vecinas del estado actual
         for estado in self.estadosPosibles: #Iteramos sobre cada estado posible
             contador=0 #Contador para saber cuantos elementos dentro de un estado son iguales
-            for item in estado: #Iteramos sobre cada elemento del estado
-                if self.estadoActual[int(estado.index(item))]==item: #Si el elemento del estado actual es igual al elemento del estado posible aumentamos el contador en 1
+            for i,item in enumerate(estado): #Iteramos sobre cada elemento del estado
+                if self.estadoActual[i]!=item: #Si el elemento del estado actual es distinto al elemento del estado posible aumentamos el contador en 1
                     contador+=1
-            if contador==2: #Si el contador es igual a 2 significa que hubo 1 sola permutacion, dado que solo cambiaron 2 valores de posicion en el estado
+            if contador==2: #Si el contador es igual a 2 significa que hubieron 2 cambios en el estado, por ende 1 permutacion
                 self.estadosVecinos.append(estado)
     
 
@@ -88,7 +92,7 @@ class TempleSimulado:
     def tempSchedule(self):
 
         for iteracion in range(self.numIteraciones+1):
-            temperatura=self.tempInicial-(self.tempInicial/self.numIteraciones)*iteracion
+            temperatura=self.tempInicial+((1-self.tempInicial)/self.numIteraciones)*iteracion
             self.temperaturas.append(temperatura)
 
     
@@ -98,23 +102,23 @@ class TempleSimulado:
         costo=0
         for i,elemento in enumerate(estado): 
             if i==0:
-                aEstrella=Aestrella(self.nodoInicial,elemento,self.arbol)
-                aEstrella.buscador()
-                costo+=len(aEstrella.camino)
-                self.arbol.resetNodos()
+                self.aEstrella.nodoInicial=self.nodoInicial
+                self.aEstrella.nodoFinal=elemento
+                self.aEstrella.buscador()
+                costo+=len(self.aEstrella.camino)
 
             elif i==len(estado)-1:
-                aEstrella=Aestrella(elemento,self.nodoFinal,self.arbol)
-                aEstrella.buscador()
-                costo+=len(aEstrella.camino)
-                self.arbol.resetNodos()
+                self.aEstrella.nodoInicial=elemento
+                self.aEstrella.nodoFinal=self.nodoFinal
+                self.aEstrella.buscador()
+                costo+=len(self.aEstrella.camino)
 
             else:
                 elementoAnterior=estado[i-1]
-                aEstrella=Aestrella(elementoAnterior,elemento,self.arbol)
-                aEstrella.buscador()
-                costo+=len(aEstrella.camino)
-                self.arbol.resetNodos()
+                self.aEstrella.nodoInicial=elementoAnterior
+                self.aEstrella.nodoFinal=elemento
+                self.aEstrella.buscador()
+                costo+=len(self.aEstrella.camino)
         
         return costo
 

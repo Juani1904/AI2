@@ -46,7 +46,7 @@ class Aestrella:
                     # Calculamos funcion F
                     vecino.funcionF = self.calculaF(vecino)
                     # Elegimos al nodo con menor F
-                    if (vecino.funcionF < valorFmin):
+                    if (vecino.funcionF <= valorFmin):
                         valorFmin = vecino.funcionF
                         self.vecinoFmin = vecino
                     # Establecemos al vecino analizado como visado
@@ -63,6 +63,11 @@ class Aestrella:
         
         #Una vez terminado el while le volvemos a pasar el self.ruta para que cargue el ultimo nodo actual
         self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
+
+        #Finalizada la busqueda reseamos todos los valores de los nodos para que no interfieran en futuras busquedas
+        for nodo in self.arbol.nodos:
+            nodo.estado = False
+            nodo.funcionF = 0
 
         return f"El camino es: {self.instrucciones} y la distancia es {len(self.camino)} casillas"
 
