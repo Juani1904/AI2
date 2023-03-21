@@ -40,8 +40,10 @@ while True:
 
 
 #Finalmente le pasamos los parametros al objeto algoritmo TempleSimulado
+numeroIteraciones=int(input("Ingrese numero de iteraciones: "))
+temperaturaInicial=int(input("Ingrese temperatura inicial: "))
 
-templeSimulado=TempleSimulado(arbol,nodoEstacionamiento, listaProductos,100,10)
+templeSimulado=TempleSimulado(arbol,nodoEstacionamiento, listaProductos,temperaturaInicial,numeroIteraciones)
 
 
 

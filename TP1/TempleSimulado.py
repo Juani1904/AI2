@@ -62,12 +62,12 @@ class TempleSimulado:
         
         #Imprimimos el estado final
         print("El orden optimo es: ")
-        print("1) Camion")
+        print("1° Camion")
         contador=1
         for i,elemento in enumerate(self.estadoActual):
-            print(f"{i+2}) Articulo ID {self.arbol.coordenadaAId(elemento)}")
+            print(f"{i+2}° Articulo ID {self.arbol.coordenadaAId(elemento)}")
             contador+=1
-        print (f"{contador+1}) Camion")
+        print (f"{contador+1}° Camion")
         #Ploteamos los caminos recorridos por el estado optimo (actual en este caso)
         self.plotEstadoActual()
                 

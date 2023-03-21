@@ -3,6 +3,7 @@ from Nodos import NodoCamino
 from Nodos import NodoCaja
 import matplotlib.pyplot as plt
 from nodosException import nodosException
+import random
 class Aestrella:
 
     # Creamos el constructor de la clase
@@ -17,7 +18,7 @@ class Aestrella:
         # En un principio el nodo actual sera el nodo inicial
         self.nodoActual = None
         self.vecinoFmin = None
-
+        self.contadorColores=0
         # Creamos una lista donde cargaremos la hoja de ruta
         self.instrucciones = []
         #Creamos una lista donde cargaremos las coordenadas en X del camino
@@ -166,11 +167,13 @@ class Aestrella:
     
     #Creamos un metodo para plotear el camino realizado por el algoritmo
     def plotear(self):
-        
+        #Creamos una lista de colores
+        colores = ['red','blue','green','yellow','orange','purple','pink','brown','olive','cyan']
         plt.figure("Roadmap",figsize=(10,10))
         plt.xlabel("Coordenada X")
         plt.ylabel("Coordenada Y")
-        plt.plot(self.coordenadasX, self.coordenadasY,linewidth=10.0,color='magenta')
+        plt.plot(self.coordenadasX, self.coordenadasY,linewidth=10.0,color=colores[self.contadorColores])
+        self.contadorColores+=1
         #Tambien vamos a plotear los nodos prohibidos en color negro con un grosor grande y rectangulos
         for nodo in self.arbol.nodos:
             if type(nodo) is NodoCaja:
