@@ -1,6 +1,6 @@
 #En este modulo implementaremos la clase del algoritmo temple simulado, para encontrar el optimo deoperacion de picking
 
-import itertools
+
 from Aestrella import Aestrella
 import random
 import math
@@ -20,7 +20,7 @@ class TempleSimulado:
         self.numIteraciones=numIteraciones
         self.temperaturas=[]
         self.estadoActual=listaProductos
-        self.estadosVecinos=[]
+        self.estadoVecino=[]
         self.estadosPosibles=[]
         self.aEstrella=Aestrella(None,None,self.arbol)
         #Ejecutamos el algoritmo
@@ -42,23 +42,20 @@ class TempleSimulado:
             #Calculamos costo del estado actual
             costoActual=self.calculaCosto(self.estadoActual)
 
-            #Elegimos al azar un estado vecino del estado actual y tomamos su costo
-
-            estadoVecino=self.estadosVecinos[random.randint(0,len(self.estadosVecinos)-1)]
-            costoVecino=self.calculaCosto(estadoVecino)
+            costoVecino=self.calculaCosto(self.estadoVecino)
 
             #Calculamos la diferencia de costo entre el estado actual y el vecino
             deltaCosto=costoVecino-costoActual
             
             #Analizamos el valor de delta Costo
             if deltaCosto<0: #Estado vecino mejor que el actual
-                self.estadoActual=estadoVecino #Actualizamos el estado actual
+                self.estadoActual=self.estadoVecino #Actualizamos el estado actual
             else: #Estado vecino peor que el actual
                 #Calculamos la probabilidad de aceptar el estado vecino
                 probabilidadAceptacion=math.exp(-deltaCosto/temperatura)
                 #Ahora vemos si la probabilidad de aceptacion es mayor que un numero aleatorio entre 0 y 1 generado por random
                 if random.random() < probabilidadAceptacion:
-                    self.estadoActual=estadoVecino #Actualizamos el estado actual
+                    self.estadoActual=self.estadoVecino #Actualizamos el estado actual
         
         #Imprimimos el estado final
         print("El orden optimo es: ")
@@ -77,16 +74,24 @@ class TempleSimulado:
     #Para ello haremos uso de la libreria iter tools
     def calculaVecinos(self):
 
-        self.estadosPosibles=list(itertools.permutations(self.estadoActual))
+        #Mediante un randint, vamos a generar 2 numeros aleatorios, que vayan del 0 al len-1 del estado actual
+        #Estos numeros aleatorios representaran los indices de los productos que vamos a permutar
+        self.estadoVecino=self.estadoActual
+        while True:
 
-        #Ahora vamos a determinar cuales de las permutaciones son vecinas del estado actual
-        for estado in self.estadosPosibles: #Iteramos sobre cada estado posible
-            contador=0 #Contador para saber cuantos elementos dentro de un estado son iguales
-            for i,item in enumerate(estado): #Iteramos sobre cada elemento del estado
-                if self.estadoActual[i]!=item: #Si el elemento del estado actual es distinto al elemento del estado posible aumentamos el contador en 1
-                    contador+=1
-            if contador==2: #Si el contador es igual a 2 significa que hubieron 2 cambios en el estado, por ende 1 permutacion
-                self.estadosVecinos.append(estado)
+            index1=random.randint(0,len(self.estadoActual)-1)
+            index2=random.randint(0,len(self.estadoActual)-1)
+            if index1!=index2:
+                aux=self.estadoVecino[index1]
+                self.estadoVecino[index1]=self.estadoVecino[index2]
+                self.estadoVecino[index2]=aux
+                break
+            else:
+                continue
+
+            
+            
+        
     
 
     #Definimos el metodo para calcular la agenda o esquema de enfriamiento
