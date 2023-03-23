@@ -169,6 +169,7 @@ class Aestrella:
     def plotear(self):
         #Creamos una lista de colores
         colores = ['red','blue','green','yellow','orange','purple','pink','brown','olive','cyan']
+        colores.extend(colores)
         plt.figure("Roadmap",figsize=(10,10))
         plt.xlabel("Coordenada X")
         plt.ylabel("Coordenada Y")
