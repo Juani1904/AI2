@@ -82,10 +82,10 @@ class Aestrella:
                                 #Vamos a declarar al nodo actual como el nodo abierto
                                 self.nodoActual=vecinoAbierto
                                 flag=True
-                            elif diferenciaNivel > 1 and diferenciaNivel < 3: #Lo establecemos en cierta cantidad de niveles para evitar que vaya a saltar a nodos muy lejanos a su entorno
+                            elif diferenciaNivel > 1 and diferenciaNivel < 5: #Lo establecemos en cierta cantidad de niveles para evitar que vaya a saltar a nodos muy lejanos a su entorno
                                 #Hacemos pop en la lista de camino tantas veces como la diferencia de nivel
-                                #for i in range(diferenciaNivel-1):
-                                self.camino.pop()
+                                for i in range(diferenciaNivel-1):
+                                    self.camino.pop()
                                 #Establecemos al nodo actual como el nodo abierto
                                 self.nodoActual=vecinoAbierto
                                 flag=True
@@ -148,6 +148,7 @@ class Aestrella:
         self.coordenadasX = []
         self.coordenadasY = []
         self.nodosVisitados = []
+        self.numeroIteraciones
 
         #Reseteo de valores de los nodos
         for nodo in self.arbol.nodos:

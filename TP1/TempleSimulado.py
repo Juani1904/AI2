@@ -40,9 +40,9 @@ class TempleSimulado:
             self.calculaVecinos()
 
             #Calculamos costo del estado actual
-            costoActual=self.calculaCosto(self.estadoActual)
+            costoActual=self.calculaCosto(self.estadoActual,self.nodoInicial,self.nodoFinal)
 
-            costoVecino=self.calculaCosto(self.estadoVecino)
+            costoVecino=self.calculaCosto(self.estadoVecino,self.nodoInicial,self.nodoFinal)
 
             #Calculamos la diferencia de costo entre el estado actual y el vecino
             deltaCosto=costoVecino-costoActual
@@ -104,12 +104,12 @@ class TempleSimulado:
 
     
     #Definimos metodo para calcular los costos
-    def calculaCosto(self,estado):
+    def calculaCosto(self,estado,nodoInicial,nodoFinal):
         
         costo=0
         for i,elemento in enumerate(estado): 
             if i==0:
-                self.aEstrella.nodoInicial=self.nodoInicial
+                self.aEstrella.nodoInicial=nodoInicial
                 self.aEstrella.nodoFinal=elemento
                 self.aEstrella.buscador()
                 costo+=self.aEstrella.distanciaRecorrida
@@ -117,7 +117,7 @@ class TempleSimulado:
 
             elif i==len(estado)-1:
                 self.aEstrella.nodoInicial=elemento
-                self.aEstrella.nodoFinal=self.nodoFinal
+                self.aEstrella.nodoFinal=nodoFinal
                 self.aEstrella.buscador()
                 costo+=self.aEstrella.distanciaRecorrida
                 self.aEstrella.reset()
