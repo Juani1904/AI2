@@ -78,11 +78,11 @@ class Aestrella:
                             #Si la diferencia de sus costos del camino es cero, significa que se encuentran en el mismo nivel
                             #Si es 1 significa que el nodo abierto esta a una diferencia de 1 nivel del nodo actual, si es 2 a 2, etc
                             diferenciaNivel=abs(self.vecinoFmin.funcionG-vecinoAbierto.funcionG)
-                            if (diferenciaNivel == 1) or (diferenciaNivel == 0):
+                            if (diferenciaNivel == 1):
                                 #Vamos a declarar al nodo actual como el nodo abierto
                                 self.nodoActual=vecinoAbierto
                                 flag=True
-                            elif diferenciaNivel > 1 and diferenciaNivel < 5: #Lo establecemos en cierta cantidad de niveles para evitar que vaya a saltar a nodos muy lejanos a su entorno
+                            elif diferenciaNivel > 1 and diferenciaNivel < 3: #Lo establecemos en cierta cantidad de niveles para evitar que vaya a saltar a nodos muy lejanos a su entorno
                                 #Hacemos pop en la lista de camino tantas veces como la diferencia de nivel
                                 #for i in range(diferenciaNivel-1):
                                 self.camino.pop()
