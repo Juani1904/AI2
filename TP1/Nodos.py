@@ -9,6 +9,7 @@ class NodoCamino:
         # Si esta True es porque fue visitado, si es False es porque aun no fue visitado
         self.estado = estado
         self.funcionF = 0
+        self.funcionG = 0
 
     # Creamos metodo para obtener la distancia del manhattan
     def distanciaManhattan(self, nodoFinal):
