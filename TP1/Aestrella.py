@@ -18,7 +18,9 @@ class Aestrella:
         # En un principio el nodo actual sera el nodo inicial
         self.nodoActual = None
         self.vecinoFmin = None
+        self.nodosVisitados = []
         self.contadorColores=0
+
         # Creamos una lista donde cargaremos la hoja de ruta
         self.instrucciones = []
         #Creamos una lista donde cargaremos las coordenadas en X del camino
@@ -61,17 +63,43 @@ class Aestrella:
 
                     else:
                         None
-
-                # Le pasamos al metodo ruta las coordenadas del vecino que elegimos y el nodo actual, para que determine la direccion
-                self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
-                # Actualizamos nodo actual al vecino con menor F y lo agregamos al camino
-                self.camino.append(self.vecinoFmin)
-                # Establecemos al vecino analizado como visado
-                self.nodoActual.vecinos[int(self.nodoActual.vecinos.index(self.vecinoFmin))].estado = True
-                #Elegimos al nuevo nodo actual
-                self.nodoActual = self.vecinoFmin
                 
-                 
+                #Guardamos el indice donde se encuentra el nodo actual en la lista de nodos
+                indiceNodoActual=self.arbol.nodos.index(self.nodoActual)
+
+                #Ahora, antes de elegir al vecino con menor Fmin, vamos a ver que los nodos ya visitados no tengan un Fmin mas chico
+                flag=False
+                for nodoAbierto in self.nodosVisitados:
+                    for vecinoAbierto in nodoAbierto.vecinos:
+
+                        #Primero hay que identificar la diferencia de nivel en el espacio de busqueda en que se encuentran ambos nodos relativamente
+
+                        if (vecinoAbierto.funcionF != 0) and (vecinoAbierto.funcionF < self.vecinoFmin.funcionF) and (type(vecino) is NodoCamino) and (vecinoAbierto.estado==False) and (vecinoAbierto!=self.nodoActual):
+                            #Si la diferencia de sus costos del camino es cero, significa que se encuentran en el mismo nivel
+                            #Si es 1 significa que el nodo abierto esta a una diferencia de 1 nivel del nodo actual, si es 2 a 2, etc
+                            diferenciaNivel=abs(self.vecinoFmin.funcionG-vecinoAbierto.funcionG)
+                            if (diferenciaNivel == 1) or (diferenciaNivel == 0):
+                                #Vamos a declarar al nodo actual como el nodo abierto
+                                self.nodoActual=vecinoAbierto
+                                flag=True
+                            elif diferenciaNivel > 1 and diferenciaNivel < 5: #Lo establecemos en cierta cantidad de niveles para evitar que vaya a saltar a nodos muy lejanos a su entorno
+                                #Hacemos pop en la lista de camino tantas veces como la diferencia de nivel
+                                #for i in range(diferenciaNivel-1):
+                                self.camino.pop()
+                                #Establecemos al nodo actual como el nodo abierto
+                                self.nodoActual=vecinoAbierto
+                                flag=True
+
+
+                #Si no simplemente agregamos al camino el nodo actual y pasamos al vecino
+                if flag==False:
+                    self.camino.append(self.nodoActual)
+                    self.nodoActual=self.vecinoFmin
+
+                # Establecemos al nodo anterior como visado y lo agregamos a la lista de nodos visitados
+                self.arbol.nodos[indiceNodoActual].estado = True
+                self.nodosVisitados.append(self.arbol.nodos[indiceNodoActual])
+
                 #Si el numero de iteraciones es mayor a 1000, lanzamos la excepcion
                 if self.numeroIteraciones>1000:
                     raise nodosException("El buscador se quedo trabado.Haciendo backtrack al estado anterior")
@@ -94,13 +122,15 @@ class Aestrella:
                 #Seteamos al contador de iteraciones nuevamente en 0
                 self.numeroIteraciones=0
                 continue
-                
+            
+        #Finalmente agregamos el nodo final al camino
+        self.camino.append(self.nodoFinal) 
 
         #Asignamos la distancia recorrida al atributo
         self.distanciaRecorrida = len(self.camino)
 
-        #Una vez terminado el while le volvemos a pasar el self.ruta para que cargue el ultimo nodo actual
-        self.ruta(self.nodoActual.coordenadaX, self.nodoActual.coordenadaY,self.vecinoFmin.coordenadaX, self.vecinoFmin.coordenadaY)
+        #Llamamos al metodo ruta para que me genere las instrucciones y me mande las coordenadas del camino a los atributos correspondientes
+        self.ruta()
 
         return f"El camino es: {self.instrucciones} y la distancia es {self.distanciaRecorrida} casillas"
 
@@ -117,18 +147,22 @@ class Aestrella:
         self.instrucciones = []
         self.coordenadasX = []
         self.coordenadasY = []
+        self.nodosVisitados = []
+
         #Reseteo de valores de los nodos
         for nodo in self.arbol.nodos:
             nodo.estado = False
             nodo.funcionF = 0
+            nodo.funcionG = 0
 
     def calculaG(self):
 
         return len(self.camino)+1
 
     def calculaF(self, nodo):
-
-        return self.calculaG() + self.calculaH(nodo)
+        valorG=self.calculaG()
+        nodo.funcionG=valorG
+        return valorG + self.calculaH(nodo)
 
     def calculaH(self, nodo):
 
@@ -139,30 +173,38 @@ class Aestrella:
 
     # Creamos un metodo que me indique en que direccion se desplazo el algoritmo y lo coloque en la hoja de ruta
 
-    def ruta(self, coordenadaXActual, coordenadaYActual, coordenadaXVecino, coordenadaYVecino):
+    def ruta(self):
 
-        variacionX = coordenadaXVecino-coordenadaXActual
-        variacionY = coordenadaYVecino-coordenadaYActual
+        for i,nodo in enumerate(self.camino):
 
-        if ((variacionX) > 0):
-            instruccion = "Derecha"
+            if (i==0):
 
-        elif ((variacionX) < 0):
-            instruccion = "Izquierda"
+                variacionX = self.camino[1].coordenadaX-nodo.coordenadaX
+                variacionY = self.camino[1].coordenadaY-nodo.coordenadaY
 
-        elif ((variacionY) < 0):
-            instruccion = "Arriba"
+            else:
+                variacionX = self.camino[i].coordenadaX-self.camino[i-1].coordenadaX
+                variacionY = self.camino[i].coordenadaY-self.camino[i-1].coordenadaY
 
-        elif ((variacionY) > 0):
-            instruccion = "Abajo"
+            if ((variacionX) > 0):
+                instruccion = "Derecha"
 
-        else:
-            instruccion = "Llego a destino"
-        self.instrucciones.append(instruccion)
-    
-        #Ademas vamos a agregar las coordenadas en X a una lista y las coordenadas en Y a otra lista para luego plotear el camino
-        self.coordenadasX.append(coordenadaXActual)
-        self.coordenadasY.append(coordenadaYActual)
+            elif ((variacionX) < 0):
+                instruccion = "Izquierda"
+
+            elif ((variacionY) < 0):
+                instruccion = "Arriba"
+
+            elif ((variacionY) > 0):
+                instruccion = "Abajo"
+
+            else:
+                instruccion = "Llego a destino"
+
+            self.instrucciones.append(instruccion)
+            #Ademas vamos a agregar las coordenadas en X a una lista y las coordenadas en Y a otra lista para luego plotear el camino
+            self.coordenadasX.append(nodo.coordenadaX)
+            self.coordenadasY.append(nodo.coordenadaY)
 
     
     #Creamos un metodo para plotear el camino realizado por el algoritmo
