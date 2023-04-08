@@ -41,16 +41,17 @@ class Aestrella:
         while (self.nodoActual != self.nodoFinal):
 
             self.nodoActual.estado=True #Establecemos el estado del nodo actual como visitado
+            self.nodosVisitados.append(self.nodoActual) #Agregamos el nodo actual a la lista de nodos visitados
             #Llamamos al metodo que calcula el minimo F de los vecinos de un nodo que le pase como parametro
             #A su vez este metodo tambien asigna a los nodos del arbol el valor de F y G
             #Este metodo retorna el nodo con menor F
             self.nodoPadre,_=self.calculaFmin(self.nodoActual)
-
+            #self.nodoActual=self.nodoPadre
             #Una vez teniendo el nodo hijo con F minima, lo expandimos, calculamos el valor Fmin de sus hijos, y chequeamos que dicho valor sea menor al Fmin de los nodos hermanos del nodo padre
             #Si es menor, entonces el nodo actual (nodo abuelo), pasa a ser el nodo padre
             #Si no, el nodo abuelo pasa a ser el hermano del nodo padre (el que tenia F menor que el hijo de su hermano)
 
-            self.nodoHijo,FminHijo=self.calculaFmin(self.nodoPadre,True,2)
+            self.nodoHijo,FminHijo=self.calculaFmin(self.nodoPadre,True)
 
             for nodoHermano in self.nodoActual.vecinos:
                 if (nodoHermano != self.nodoPadre) and (type(nodoHermano) != NodoCaja) and (nodoHermano.estado == False):
@@ -61,25 +62,34 @@ class Aestrella:
                         
                 else:
                     self.nodoActual=self.nodoPadre
+            
+            #Adicionalmente verificamos que el valor de F no sea mayor a ninguno de los nodos ya expandidos pero no visitados no tengan un F menor
+            #nodosVisitadosInvertida=self.nodosVisitados[::-1]
+            #for nodoExpandido in nodosVisitadosInvertida:
+            #    for nodoVecino in nodoExpandido.vecinos:
+            #        if (nodoVecino.estado == False) and (type(nodoVecino) is NodoCamino):
+            #            self.nodoActual=nodoVecino
+            #            break
                         
         
             #Establecemos el estado del nodo actual como visado y lo agregamos al camino
             
             self.camino.append(self.nodoActual)
+            #Hacemos el tratamiento al camino para que no incluya los caminos que no se terminaron de recorrer
+            caminoInvertido=self.camino[::-1]
+            for i,paso in enumerate(caminoInvertido):
+                if (paso!=caminoInvertido[-1]):
+                    contador=1
+                    while(paso.vengoDe != caminoInvertido[i+contador]):
+                        self.camino.remove(caminoInvertido[i+contador])
+                        contador+=1
             
                 
         #Finalmente agregamos el nodo final e inicial al camino
         self.camino.insert(0,self.nodoInicial)
         self.camino.append(self.nodoFinal)
 
-        #Hacemos el tratamiento al camino para que no incluya los caminos que no se terminaron de recorrer
-        caminoInvertido=self.camino[::-1]
-        for i,paso in enumerate(caminoInvertido):
-            if (paso!=self.nodoInicial) and (paso!=self.nodoFinal):
-                contador=1
-                while(paso.vengoDe != caminoInvertido[i+contador]):
-                    self.camino.remove(caminoInvertido[i+contador])
-                    contador+=1
+        
                     
                 #elif (paso.vengoDe == caminoInvertido[i+1]) and (caminoInvertido[1+i])
 
@@ -123,12 +133,12 @@ class Aestrella:
         if activador!=None:
             valorG=self.calculaG(numero)
             valorH=self.calculaH(nodo)
-            nodo.funcionG=valorG
             return valorG + valorH
         else:
             valorG=self.calculaG()
             valorH=self.calculaH(nodo)
             nodo.funcionG=valorG
+            
             nodo.funcionF=valorG+valorH
             return valorG + valorH
         
