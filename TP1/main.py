@@ -4,6 +4,7 @@ from Nodos import NodoCaja
 from Aestrella import Aestrella
 from nodosException import nodosException
 from Estanterias import Estanteria
+import matplotlib.pyplot as plt
 
 #Creamos una funcion para referenciar el id de la caja a la coordenada en el camino
 def idACoordenada(id):
@@ -84,6 +85,13 @@ aestrella = Aestrella(nodoInicial, nodoFinal, arbol)
 print(aestrella.buscador())
 #Finalmente ploteamos el camino, nodos de busqueda y espacio prohibido
 aestrella.plotear()
+
+#Finalmente mostramos todo
+ax = plt.gca()
+ax.set_facecolor('gray')
+ax.invert_yaxis()
+plt.axis('equal')
+plt.show()
 
 
 
