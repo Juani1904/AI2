@@ -58,22 +58,33 @@ class Aestrella:
                     if(nodoHermano.funcionF < FminHijo):
                         self.nodoActual=nodoHermano
                         
-                    else:
-                        self.nodoActual=self.nodoPadre
-                
-
-               
+                        
+                else:
+                    self.nodoActual=self.nodoPadre
+                        
+        
             #Establecemos el estado del nodo actual como visado y lo agregamos al camino
             
             self.camino.append(self.nodoActual)
+            
                 
-                
-                        
-        #Finalmente agregamos el nodo final al camino
-        self.camino.append(self.nodoFinal) 
+        #Finalmente agregamos el nodo final e inicial al camino
+        self.camino.insert(0,self.nodoInicial)
+        self.camino.append(self.nodoFinal)
+
+        #Hacemos el tratamiento al camino para que no incluya los caminos que no se terminaron de recorrer
+        caminoInvertido=self.camino[::-1]
+        for i,paso in enumerate(caminoInvertido):
+            if (paso!=self.nodoInicial) and (paso!=self.nodoFinal):
+                contador=1
+                while(paso.vengoDe != caminoInvertido[i+contador]):
+                    self.camino.remove(caminoInvertido[i+contador])
+                    contador+=1
+                    
+                #elif (paso.vengoDe == caminoInvertido[i+1]) and (caminoInvertido[1+i])
 
         #Asignamos la distancia recorrida al atributo
-        self.distanciaRecorrida = len(self.camino)
+        self.distanciaRecorrida = len(self.camino)-2
 
         #Llamamos al metodo ruta para que me genere las instrucciones y me mande las coordenadas del camino a los atributos correspondientes
         self.ruta()
@@ -145,6 +156,10 @@ class Aestrella:
                 if activador != None:
                     listaF.append(self.calculaF(vecino,activador,numero))
                 else:
+
+                    if vecino.vengoDe==None:
+                        vecino.vengoDe=nodo
+    
                     listaF.append(self.calculaF(vecino))
             else:
                 listaF.append(1000) #Si el vecino ya fue visitado, le asignamos un valor F muy alto para que no sea elegido
