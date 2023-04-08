@@ -51,28 +51,18 @@ class Aestrella:
             #Si no, el nodo abuelo pasa a ser el hermano del nodo padre (el que tenia F menor que el hijo de su hermano)
 
             self.nodoHijo,FminHijo=self.calculaFmin(self.nodoPadre,True,2)
-            nodoActual=0
+
             for nodoHermano in self.nodoActual.vecinos:
                 if (nodoHermano != self.nodoPadre) and (type(nodoHermano) != NodoCaja) and (nodoHermano.estado == False):
 
                     if(nodoHermano.funcionF < FminHijo):
+                        self.nodoActual=nodoHermano
                         
-                        nodoActual=nodoHermano
-                        break
-                        
-                            
-                    elif (nodoHermano.funcionF == FminHijo):
-                        if (nodoHermano.funcionG < self.nodoHijo.funcionG):
-                            nodoActual=nodoHermano
-                            break
-                            
-
                     else:
-                        nodoActual=self.nodoPadre
+                        self.nodoActual=self.nodoPadre
                 
-            if nodoActual==0:
-                break
-            self.nodoActual=nodoActual    
+
+               
             #Establecemos el estado del nodo actual como visado y lo agregamos al camino
             
             self.camino.append(self.nodoActual)
@@ -162,36 +152,7 @@ class Aestrella:
         #Buscamos el valor minimo de la lista
         valorMinimoF=min(listaF)
         indiceMinimo=listaF.index(valorMinimoF)
-        #Vemos cuantas veces aparece el valor minimo en la lista
-        cantidadMinimos=listaF.count(valorMinimoF)
-
-        #Si el minimo se repite mas de una vez, lo que define es el nodo con el valor G menor. Si no se repite, entonces el nodo con el valor F menor es el nodo con el valor F minimo
-        if cantidadMinimos > 1:
-
-            #Creamos una lista de los indices donde aparece el valor minimo
-            indicesMinimos=[]
-            for i in range(len(listaF)):
-                if listaF[i] == valorMinimoF:
-                    indicesMinimos.append(i)
-            #Creamos una lista de los valores G de los vecinos del nodo
-            listaG=[]
-            for indice in indicesMinimos:
-                listaG.append(nodo.vecinos[indice].funcionG)
-            #Buscamos el valor minimo de la lista de valores G
-            valorMinimoG=min(listaG)
-            #Buscamos el indice del valor minimo de la lista de valores G
-            indiceMinimoG=listaG.index(valorMinimoG)
-            #Buscamos el indice del valor minimo de la lista de valores F
-            #Finalmente vemos cuantas veces aparece el minimo G en la lista de valores G
-            # Si aparece mas de una vez significa que sigue sin ser determinante
-            #Entonces debemos fijarnos en el F de sus hijos a ver cual es el mas chico
-            # Si no aparece mas de una vez, entonces elegimos el nodo con el valor G minimo
-            if listaG.count(valorMinimoG) > 1:
-                pass
-            else:
-                indiceMinimo=indicesMinimos[indiceMinimoG]
-            
-                        
+                
         return nodo.vecinos[indiceMinimo], valorMinimoF
             
             
