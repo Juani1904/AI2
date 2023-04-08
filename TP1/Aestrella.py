@@ -46,7 +46,7 @@ class Aestrella:
             #A su vez este metodo tambien asigna a los nodos del arbol el valor de F y G
             #Este metodo retorna el nodo con menor F
             self.nodoPadre,_=self.calculaFmin(self.nodoActual)
-            #self.nodoActual=self.nodoPadre
+            
             #Una vez teniendo el nodo hijo con F minima, lo expandimos, calculamos el valor Fmin de sus hijos, y chequeamos que dicho valor sea menor al Fmin de los nodos hermanos del nodo padre
             #Si es menor, entonces el nodo actual (nodo abuelo), pasa a ser el nodo padre
             #Si no, el nodo abuelo pasa a ser el hermano del nodo padre (el que tenia F menor que el hijo de su hermano)
