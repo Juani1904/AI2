@@ -53,7 +53,7 @@ class Aestrella:
             #Si no, el nodo abuelo pasa a ser el hermano del nodo padre (el que tenia F menor que el hijo de su hermano)
 
             #Adicionalmente verificamos que el valor de F no sea mayor a ninguno de los nodos ya expandidos pero no visitados no tengan un F menor
-            if self.nodoPadre.funcionF > self.nodoActual.funcionF:
+            if (self.nodoPadre.funcionF > self.nodoActual.funcionF) and (self.nodoActual != self.nodoInicial):
                 
                 nodosVisitadosInvertida=self.nodosVisitados[::-1]
                 for nodoExpandido in nodosVisitadosInvertida:
@@ -64,7 +64,7 @@ class Aestrella:
                                 break
                     else:
                         continue
-                    
+
                     break
             else:
 
@@ -91,8 +91,15 @@ class Aestrella:
             for paso in caminoInvertido:
                 if (paso != caminoInvertido[-1]):
                     try:
+                        
                         while(paso.vengoDe != caminoInvertido[caminoInvertido.index(paso)+1]):
-                            caminoInvertido.remove(caminoInvertido[caminoInvertido.index(paso)+1])
+                        
+                            pasoErroneo=caminoInvertido[caminoInvertido.index(paso)+1]
+                            caminoInvertido.remove(pasoErroneo)
+                            pasoErroneo.estado==True
+
+                        #self.calculaFmin(caminoInvertido[caminoInvertido.index(paso)+1])
+                        
                     except IndexError:
                         break
             self.camino=caminoInvertido[::-1]
@@ -103,7 +110,7 @@ class Aestrella:
 
         
                     
-                #elif (paso.vengoDe == caminoInvertido[i+1]) and (caminoInvertido[1+i])
+
 
         #Asignamos la distancia recorrida al atributo
         self.distanciaRecorrida = len(self.camino)-2
@@ -149,9 +156,10 @@ class Aestrella:
         else:
             valorG=self.calculaG()
             valorH=self.calculaH(nodo)
-            nodo.funcionG=valorG
-            
-            nodo.funcionF=valorG+valorH
+            if nodo.funcionG==0:
+                nodo.funcionG=valorG
+            if nodo.funcionF==0:
+                nodo.funcionF=valorG+valorH
             return valorG + valorH
         
 
