@@ -62,8 +62,6 @@ class Aestrella:
                             if (nodoVecino.funcionF < self.nodoPadre.funcionF):
                                 self.nodoActual=nodoVecino
                                 break
-                            elif (nodoExpandido==self.nodoInicial):
-                                break
                     else:
                         continue
 
@@ -258,6 +256,5 @@ class Aestrella:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
                 #Asignacion del numero de nodo a cada caja
                 plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=10, ha='center', va='center')
-            if type(nodo) is NodoCamino:
-                plt.text(nodo.coordenadaX, nodo.coordenadaY, str(f"{nodo.funcionG},{nodo.funcionF}"), color='white', fontsize=8, ha='center', va='center')
+            
         
