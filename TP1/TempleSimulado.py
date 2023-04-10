@@ -115,12 +115,6 @@ class TempleSimulado:
                 costo+=self.aEstrella.distanciaRecorrida
                 self.aEstrella.reset() #Reseteamos el algoritmo para que no se acumulen los costos y estados de los nodos, ni los parametros de busqueda
 
-            elif i==len(estado)-1:
-                self.aEstrella.nodoInicial=elemento
-                self.aEstrella.nodoFinal=nodoFinal
-                self.aEstrella.buscador()
-                costo+=self.aEstrella.distanciaRecorrida
-                self.aEstrella.reset()
 
             else:
                 elementoAnterior=estado[i-1]
@@ -129,6 +123,13 @@ class TempleSimulado:
                 self.aEstrella.buscador()
                 costo+=self.aEstrella.distanciaRecorrida
                 self.aEstrella.reset()
+                #Ademas si es el ultimo elemento del estado, conectarlo con el nodo final
+                if i==len(estado)-1:
+                    self.aEstrella.nodoInicial=elemento
+                    self.aEstrella.nodoFinal=nodoFinal
+                    self.aEstrella.buscador()
+                    costo+=self.aEstrella.distanciaRecorrida
+                    self.aEstrella.reset()
         
         return costo
     
@@ -142,13 +143,6 @@ class TempleSimulado:
                 self.aEstrella.plotear()
                 self.aEstrella.reset() #Reseteamos el algoritmo para que no se acumulen los costos y estados de los nodos, ni los parametros de busqueda
 
-            elif i==len(self.estadoActual)-1:
-                self.aEstrella.nodoInicial=elemento
-                self.aEstrella.nodoFinal=self.nodoFinal
-                self.aEstrella.buscador()
-                self.aEstrella.plotear()
-                self.aEstrella.reset()
-
             else:
                 elementoAnterior=self.estadoActual[i-1]
                 self.aEstrella.nodoInicial=elementoAnterior
@@ -156,6 +150,13 @@ class TempleSimulado:
                 self.aEstrella.buscador()
                 self.aEstrella.plotear()
                 self.aEstrella.reset()
+                #Ademas si es el ultimo elemento del estado, conectarlo con el nodo final
+                if i==len(self.estadoActual)-1:
+                    self.aEstrella.nodoInicial=elemento
+                    self.aEstrella.nodoFinal=self.nodoFinal
+                    self.aEstrella.buscador()
+                    self.aEstrella.plotear()
+                    self.aEstrella.reset()
         
         #Finalmente mostramos todo
         ax = plt.gca()

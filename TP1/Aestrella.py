@@ -1,9 +1,7 @@
-from Arbol import Arbol
 from Nodos import NodoCamino
 from Nodos import NodoCaja
 import matplotlib.pyplot as plt
-from nodosException import nodosException
-import random
+
 class Aestrella:
 
     # Creamos el constructor de la clase
@@ -17,7 +15,7 @@ class Aestrella:
         self.distanciaRecorrida = 0
         # En un principio el nodo actual sera el nodo inicial
         self.nodoActual = None
-        self.vecinoFmin = None
+        self.nodoPadre = None
         self.nodosVisitados = []
         self.contadorColores=0
 
@@ -34,100 +32,88 @@ class Aestrella:
     def buscador(self):
         #Establecemos al nodo actual como el nodo inicial
         self.nodoActual=self.nodoInicial
+        self.nodoActual.funcionF=self.calculaH(self.nodoInicial)
         '''
         Tenemos que hayar la forma de recorrer el arbol que creamos mediante el objeto arbol, calcular el g,h y f de cada nodo 
         y luego ir comparando los valores de f para ir eligiendo el nodo con menor f
         '''
-        self.numeroIteraciones=0 #Contador de iteraciones
-        # Para ello primero debemos establecer la condicion de satisfaccion, es decir, cuando nuestro encuentra el test objeto, o nodo final
+        
+        # Debemos establecer la condicion de satisfaccion, es decir, cuando nuestro encuentra el test objeto, o nodo final
         while (self.nodoActual != self.nodoFinal):
-            self.numeroIteraciones+=1 #Aumentamos el contador en 1
-            #Generamos el try
-            try:
+
+            self.nodoActual.estado=True #Establecemos el estado del nodo actual como visitado
+            self.nodosVisitados.append(self.nodoActual) #Agregamos el nodo actual a la lista de nodos visitados
+            #Llamamos al metodo que calcula el minimo F de los vecinos de un nodo que le pase como parametro
+            #A su vez este metodo tambien asigna a los nodos del arbol el valor de F y G
+            #Este metodo retorna el nodo con menor F
+            self.nodoPadre,_=self.calculaFmin(self.nodoActual)
+            
+            #Una vez teniendo el nodo hijo con F minima, lo expandimos, calculamos el valor Fmin de sus hijos, y chequeamos que dicho valor sea menor al Fmin de los nodos hermanos del nodo padre
+            #Si es menor, entonces el nodo actual (nodo abuelo), pasa a ser el nodo padre
+            #Si no, el nodo abuelo pasa a ser el hermano del nodo padre (el que tenia F menor que el hijo de su hermano)
+
+            #Adicionalmente verificamos que el valor de F no sea mayor a ninguno de los nodos ya expandidos pero no visitados no tengan un F menor
+            if (self.nodoPadre.funcionF > self.nodoActual.funcionF) and (self.nodoActual != self.nodoInicial):
                 
-                # Calculamos la funcion F de los vecinos del nodo actual
-                # Colocamos un valor muy alto para que el primer vecino que se encuentre tenga menor F
-                valorFmin = 100000
-                for vecino in self.nodoActual.vecinos:
-
-                    # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
-                    #Ademas establecemos la condicion de que lo ignore si es un nodo obstaculo (caja)
-                    #Para ello verificamos si el vecino es una instancia de la clase NodoCamino, ya que si es una instancia de la clase NodoCaja, no es un nodo camino
-                    if (vecino.estado == False) and (type(vecino) is NodoCamino):
-                        # Calculamos funcion F
-                        vecino.funcionF = self.calculaF(vecino)
-                        # Elegimos al nodo con menor F
-                        if (vecino.funcionF < valorFmin):
-                            valorFmin = vecino.funcionF
-                            self.vecinoFmin = vecino
-
+                nodosVisitadosInvertida=self.nodosVisitados[::-1]
+                for nodoExpandido in nodosVisitadosInvertida:
+                    for nodoVecino in nodoExpandido.vecinos:
+                        if (nodoVecino.estado == False) and (type(nodoVecino) is NodoCamino):
+                            if (nodoVecino.funcionF < self.nodoPadre.funcionF):
+                                self.nodoActual=nodoVecino
+                                break
                     else:
-                        None
+                        continue
+
+                    break
+            else:
+
+                self.nodoHijo,FminHijo=self.calculaFmin(self.nodoPadre,True)
+
+                for nodoHermano in self.nodoActual.vecinos:
+                    if (nodoHermano != self.nodoPadre) and (type(nodoHermano) != NodoCaja) and (nodoHermano.estado == False):
+
+                        if(nodoHermano.funcionF < FminHijo):
+                            self.nodoActual=nodoHermano
+                            
+                            
+                    else:
+                        self.nodoActual=self.nodoPadre
+            
+            
+                        
+        
+            #Establecemos el estado del nodo actual como visado y lo agregamos al camino
+            
+            self.camino.append(self.nodoActual)
+            #Hacemos el tratamiento al camino para que no incluya los caminos que no se terminaron de recorrer
+            caminoInvertido=self.camino[::-1]
+            for paso in caminoInvertido:
+                if (paso != caminoInvertido[-1]):
+                    try:
+                        
+                        while(paso.vengoDe != caminoInvertido[caminoInvertido.index(paso)+1]):
+                        
+                            pasoErroneo=caminoInvertido[caminoInvertido.index(paso)+1]
+                            caminoInvertido.remove(pasoErroneo)
+                            pasoErroneo.estado==True
+
+                        #self.calculaFmin(caminoInvertido[caminoInvertido.index(paso)+1])
+                        
+                    except IndexError:
+                        break
+            self.camino=caminoInvertido[::-1]
                 
-                #Guardamos el indice donde se encuentra el nodo actual en la lista de nodos
-                indiceNodoActual=self.arbol.nodos.index(self.nodoActual)
+        #Finalmente agregamos el nodo final e inicial al camino
+        self.camino.insert(0,self.nodoInicial)
+        self.camino.append(self.nodoFinal)
 
-                #Ahora, antes de elegir al vecino con menor Fmin, vamos a ver que los nodos ya visitados no tengan un Fmin mas chico
-                flag=False
-                for nodoAbierto in self.nodosVisitados:
-                    for vecinoAbierto in nodoAbierto.vecinos:
+        
+                    
 
-                        #Primero hay que identificar la diferencia de nivel en el espacio de busqueda en que se encuentran ambos nodos relativamente
-
-                        if (vecinoAbierto.funcionF != 0) and (vecinoAbierto.funcionF < self.vecinoFmin.funcionF) and (type(vecino) is NodoCamino) and (vecinoAbierto.estado==False) and (vecinoAbierto!=self.nodoActual):
-                            #Si la diferencia de sus costos del camino es cero, significa que se encuentran en el mismo nivel
-                            #Si es 1 significa que el nodo abierto esta a una diferencia de 1 nivel del nodo actual, si es 2 a 2, etc
-                            diferenciaNivel=abs(self.vecinoFmin.funcionG-vecinoAbierto.funcionG)
-                            if (diferenciaNivel == 1):
-                                #Vamos a declarar al nodo actual como el nodo abierto
-                                self.nodoActual=vecinoAbierto
-                                flag=True
-                            elif diferenciaNivel > 1 and diferenciaNivel < 5: #Lo establecemos en cierta cantidad de niveles para evitar que vaya a saltar a nodos muy lejanos a su entorno
-                                #Hacemos pop en la lista de camino tantas veces como la diferencia de nivel
-                                for i in range(diferenciaNivel-1):
-                                    self.camino.pop()
-                                #Establecemos al nodo actual como el nodo abierto
-                                self.nodoActual=vecinoAbierto
-                                flag=True
-
-
-                #Si no simplemente agregamos al camino el nodo actual y pasamos al vecino
-                if flag==False:
-                    self.camino.append(self.nodoActual)
-                    self.nodoActual=self.vecinoFmin
-
-                # Establecemos al nodo anterior como visado y lo agregamos a la lista de nodos visitados
-                self.arbol.nodos[indiceNodoActual].estado = True
-                self.nodosVisitados.append(self.arbol.nodos[indiceNodoActual])
-
-                #Si el numero de iteraciones es mayor a 1000, lanzamos la excepcion
-                if self.numeroIteraciones>1000:
-                    raise nodosException("El buscador se quedo trabado.Haciendo backtrack al estado anterior")
-            
-            except nodosException as e:
-                print(e) #Mostramos mensaje que el buscador se quedo trabado
-                #Eliminamos el ultimo nodo del camino, el cual es el nodoActual
-                #Habra que eliminarlo varias veces porque se sumo varias veces al camino
-                #Para asegurarnos de que no siga quedando el mismo nodo en el camino, lo removemos de cualquier espacio donde pueda estar presente
-                for elemento in self.camino:
-                    if elemento==self.nodoActual:
-                        self.camino.remove(elemento)
-                #Establecemos los nodos vecinos del nodo de donde heredamos como no visitados
-                for vecino in self.camino[-1].vecinos:
-                    vecino.estado=False
-                #Seteamos al nodo actual como visitado, para que no se vuelva a ejecutar
-                self.nodoActual.estado=True
-                #Hacemos backtrack al nodo de donde vinimos, que es el ultimo nodo del camino
-                self.nodoActual=self.camino[-1]
-                #Seteamos al contador de iteraciones nuevamente en 0
-                self.numeroIteraciones=0
-                continue
-            
-        #Finalmente agregamos el nodo final al camino
-        self.camino.append(self.nodoFinal) 
 
         #Asignamos la distancia recorrida al atributo
-        self.distanciaRecorrida = len(self.camino)
+        self.distanciaRecorrida = len(self.camino)-2
 
         #Llamamos al metodo ruta para que me genere las instrucciones y me mande las coordenadas del camino a los atributos correspondientes
         self.ruta()
@@ -138,38 +124,86 @@ class Aestrella:
     #Definimos metodo de reseteo de valores para poder iniciar una nueva busqueda sin problema
     def reset(self):
         #Reseteo de valores del objeto Aestrella
-        self.nodoInicial = None
-        self.nodoFinal = None
-        self.camino = []
-        self.distanciaRecorrida = 0
-        self.nodoActual = None
-        self.vecinoFmin = None
-        self.instrucciones = []
-        self.coordenadasX = []
-        self.coordenadasY = []
-        self.nodosVisitados = []
-        self.numeroIteraciones
-
+        self.nodoInicial=None
+        self.nodoFinal=None
+        self.nodoActual=None
+        self.nodoPadre=None
+        self.nodoHijo=None
+        self.nodosVisitados=[]
+        self.camino=[]
+        self.distanciaRecorrida=0
+        self.instrucciones=[]
+        self.coordenadasX=[]
+        self.coordenadasY=[]
+        
         #Reseteo de valores de los nodos
         for nodo in self.arbol.nodos:
             nodo.estado = False
             nodo.funcionF = 0
             nodo.funcionG = 0
+            nodo.vengoDe = None
+    
+    #Creamos sobrecarga de metodos F y G para nodos hijos
+    def calculaG(self, numero=1):
+        
+        return len(self.camino)+numero
 
-    def calculaG(self):
-
-        return len(self.camino)+1
-
-    def calculaF(self, nodo):
-        valorG=self.calculaG()
-        nodo.funcionG=valorG
-        return valorG + self.calculaH(nodo)
+    
+    def calculaF(self, nodo, activador=None,numero=1):
+        
+        if activador!=None:
+            valorG=self.calculaG(numero)
+            valorH=self.calculaH(nodo)
+            return valorG + valorH
+        else:
+            valorG=self.calculaG()
+            valorH=self.calculaH(nodo)
+            if nodo.funcionG==0:
+                nodo.funcionG=valorG
+            if nodo.funcionF==0:
+                nodo.funcionF=valorG+valorH
+            return valorG + valorH
+        
 
     def calculaH(self, nodo):
 
         # Elijo como heuristica la distancia de Manhattan
         return abs(nodo.coordenadaX - self.nodoFinal.coordenadaX) + abs(nodo.coordenadaY - self.nodoFinal.coordenadaY)
     
+
+    #Creamos un metodo que me permita calcular el valor F minimo de los vecinos de un nodo que le pase como parametro
+    #Este metodo me retornara el nodo con el valor F minimo
+    #Creamos una sobrecarga de metodo para cuando este metodo se aplica para extender nodos hijos
+    #Esto es porque, como esta hecha nuestra implementacion, cuando expandimos el nodo padre para chequear que los nodos hijos no tengan un F menor que el Fmin de los nodos hermanos del nodo padre,
+    #no metemos el nodos padre en la lista camino, por lo que la funcion G de los nodos hijos no se calcula correctamente
+    def calculaFmin(self, nodo, activador=None,numero=1):
+            
+        #Creamos una lista de valores F de los vecinos del nodo
+        listaF=[]
+        for vecino in nodo.vecinos:
+            # Si el vecino no fue visitado, proseguimos, si ya fue visitado lo ignoramos
+            #Ademas establecemos la condicion de que lo ignore si es un nodo obstaculo (caja)
+            #Para ello verificamos si el vecino es una instancia de la clase NodoCamino, ya que si es una instancia de la clase NodoCaja, no es un nodo camino
+            if (vecino.estado == False) and (type(vecino) is NodoCamino):
+                if activador != None:
+                    listaF.append(self.calculaF(vecino,activador,numero))
+                else:
+
+                    if vecino.vengoDe==None:
+                        vecino.vengoDe=nodo
+    
+                    listaF.append(self.calculaF(vecino))
+            else:
+                listaF.append(1000) #Si el vecino ya fue visitado, le asignamos un valor F muy alto para que no sea elegido
+        
+        #Buscamos el valor minimo de la lista
+        valorMinimoF=min(listaF)
+        indiceMinimo=listaF.index(valorMinimoF)
+                
+        return nodo.vecinos[indiceMinimo], valorMinimoF
+            
+            
+
     
 
     # Creamos un metodo que me indique en que direccion se desplazo el algoritmo y lo coloque en la hoja de ruta
@@ -224,4 +258,5 @@ class Aestrella:
                 plt.plot(nodo.coordenadaX, nodo.coordenadaY, marker='s', markersize=25, markerfacecolor='gray', markeredgecolor='black')
                 #Asignacion del numero de nodo a cada caja
                 plt.text(nodo.coordenadaX, nodo.coordenadaY, str(nodo.id), color='white', fontsize=10, ha='center', va='center')
+            
         

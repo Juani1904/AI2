@@ -10,6 +10,7 @@ class NodoCamino:
         self.estado = estado
         self.funcionF = 0
         self.funcionG = 0
+        self.vengoDe = None
 
     # Creamos metodo para obtener la distancia del manhattan
     def distanciaManhattan(self, nodoFinal):
