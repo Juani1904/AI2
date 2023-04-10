@@ -47,13 +47,13 @@ class Aestrella:
             #A su vez este metodo tambien asigna a los nodos del arbol el valor de F y G
             #Este metodo retorna el nodo con menor F
             self.nodoPadre,_=self.calculaFmin(self.nodoActual)
-            
+            self.nodoHijo,FminHijo=self.calculaFmin(self.nodoPadre,True)
             #Una vez teniendo el nodo hijo con F minima, lo expandimos, calculamos el valor Fmin de sus hijos, y chequeamos que dicho valor sea menor al Fmin de los nodos hermanos del nodo padre
             #Si es menor, entonces el nodo actual (nodo abuelo), pasa a ser el nodo padre
             #Si no, el nodo abuelo pasa a ser el hermano del nodo padre (el que tenia F menor que el hijo de su hermano)
 
             #Adicionalmente verificamos que el valor de F no sea mayor a ninguno de los nodos ya expandidos pero no visitados no tengan un F menor
-            if (self.nodoPadre.funcionF > self.nodoActual.funcionF) and (self.nodoActual != self.nodoInicial):
+            if (self.nodoPadre.funcionF > self.nodoActual.funcionF) and (self.nodoActual != self.nodoInicial) and (FminHijo>self.nodoPadre.funcionF):
                 
                 nodosVisitadosInvertida=self.nodosVisitados[::-1]
                 for nodoExpandido in nodosVisitadosInvertida:
@@ -62,13 +62,15 @@ class Aestrella:
                             if (nodoVecino.funcionF < self.nodoPadre.funcionF):
                                 self.nodoActual=nodoVecino
                                 break
+                            elif (nodoExpandido==self.nodoInicial):
+                                break
                     else:
                         continue
 
                     break
             else:
 
-                self.nodoHijo,FminHijo=self.calculaFmin(self.nodoPadre,True)
+                
 
                 for nodoHermano in self.nodoActual.vecinos:
                     if (nodoHermano != self.nodoPadre) and (type(nodoHermano) != NodoCaja) and (nodoHermano.estado == False):
